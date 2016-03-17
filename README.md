@@ -18,4 +18,3 @@ Pour vous aider dans cette tâche, nous vous fournissons un squelette de code, u
 - S8: Interviews et lancement de la phase de programmation
 - S11: Permanences
 - S12: Remise du projet
--
