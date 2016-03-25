@@ -2,6 +2,7 @@
 #define _FRACTAL_H
 
 struct fractal {
+  char name[];
   int a,b;
   int w,h;
   double average;
