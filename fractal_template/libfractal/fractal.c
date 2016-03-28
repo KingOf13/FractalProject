@@ -3,8 +3,30 @@
 
 struct fractal *fractal_new(int width, int height, double a, double b)
 {
-    /* TODO */
-    return NULL;
+    struct fractal *new = (struct fractal *) malloc(sizeof(fractal));
+    if (new == NULL) exit(EXIT_FAILURE);
+    new->a = a;
+    new->b = b;
+    new->w = width;
+    new->h = height;
+    new->grid = talloc(w, h);
+    return new;
+}
+
+int **talloc(int w, int h) {
+  int **matrice;
+
+  matrice = (int *) malloc( w * sizeof(int*));
+
+  if( matrice == NULL ) exit(EXIT_FAILURE);
+  for( int i = 0 ; i < w ; i++ )
+  {
+       matrice[i] = (int *) malloc (h * sizeof(int));
+
+       if( matrice[i] == NULL ) exit(EXIT_FAILURE);
+  }
+
+  return matrice
 }
 
 void fractal_free(struct fractal *f)
