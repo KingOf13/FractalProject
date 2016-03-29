@@ -66,3 +66,7 @@ double fractal_get_b(const struct fractal *f)
 {
     return f->b;
 }
+
+const char *fractal_get_name(const struct fractal *f) {
+  return f->name;
+}
