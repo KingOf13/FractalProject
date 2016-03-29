@@ -15,57 +15,54 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
 }
 
 int **talloc(int w, int h) {
-  int **matrice;
+  int **matrix;
 
-  matrice = (int *) malloc( w * sizeof(int*));
+  matrix = (int **) malloc( w * sizeof(int *));
+  if( matrix == NULL ) exit(EXIT_FAILURE);
 
-  if( matrice == NULL ) exit(EXIT_FAILURE);
   for( int i = 0 ; i < w ; i++ )
   {
-       matrice[i] = (int *) malloc (h * sizeof(int));
-
-       if( matrice[i] == NULL ) exit(EXIT_FAILURE);
+       matrix[i] = (int *) malloc (h * sizeof(int));
+       if( matrix[i] == NULL ) exit(EXIT_FAILURE);
   }
 
-  return matrice
+  return matrix;
 }
 
 void fractal_free(struct fractal *f)
 {
-    /* TODO */
+    int **matrix = f->grid;
+    for (int i = 0; i < new->w; i ++) free(matrix[i]);
+    free(name);
+    free(f);
 }
 
 int fractal_get_value(const struct fractal *f, int x, int y)
 {
-    /* TODO */
-    return 0;
+    return f->grid[x][y];
 }
 
 void fractal_set_value(struct fractal *f, int x, int y, int val)
 {
-    /* TODO */
+    f->grid[x][y] = val;
 }
 
 int fractal_get_width(const struct fractal *f)
 {
-    /* TODO */
-    return 0;
+    return f->w;
 }
 
 int fractal_get_height(const struct fractal *f)
 {
-    /* TODO */
-    return 0;
+    return f->h;
 }
 
 double fractal_get_a(const struct fractal *f)
 {
-    /* TODO */
-    return 0;
+    return f->a;
 }
 
 double fractal_get_b(const struct fractal *f)
 {
-    /* TODO */
-    return 0;
+    return f->b;
 }
