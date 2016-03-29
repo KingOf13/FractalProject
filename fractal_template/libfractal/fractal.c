@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "fractal.h"
 
-struct fractal *fractal_new(int width, int height, double a, double b)
+struct fractal *fractal_new(const char *name, int width, int height, double a, double b)
 {
     struct fractal *new = (struct fractal *) malloc(sizeof(fractal));
     if (new == NULL) exit(EXIT_FAILURE);
@@ -10,6 +10,7 @@ struct fractal *fractal_new(int width, int height, double a, double b)
     new->w = width;
     new->h = height;
     new->grid = talloc(w, h);
+    new->name = name;
     return new;
 }
 
