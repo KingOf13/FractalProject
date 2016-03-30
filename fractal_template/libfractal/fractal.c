@@ -1,19 +1,6 @@
 #include <stdlib.h>
 #include "fractal.h"
 
-struct fractal *fractal_new(const char *name, int width, int height, double a, double b)
-{
-    struct fractal *new = (struct fractal *) malloc(sizeof(fractal));
-    if (new == NULL) exit(EXIT_FAILURE);
-    new->a = a;
-    new->b = b;
-    new->w = width;
-    new->h = height;
-    new->grid = talloc(w, h);
-    new->name = name;
-    return new;
-}
-
 int **talloc(int w, int h) {
   int **matrix;
 
@@ -27,6 +14,19 @@ int **talloc(int w, int h) {
   }
 
   return matrix;
+}
+
+struct fractal *fractal_new(const char *name, int width, int height, double a, double b)
+{
+    struct fractal *new = (struct fractal *) malloc(sizeof(fractal));
+    if (new == NULL) exit(EXIT_FAILURE);
+    new->a = a;
+    new->b = b;
+    new->w = width;
+    new->h = height;
+    new->grid = talloc(w, h);
+    new->name = name;
+    return new;
 }
 
 void fractal_free(struct fractal *f)
