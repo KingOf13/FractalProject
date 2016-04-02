@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include "libfractal/fractal.h"
 #define d "-d"
 #define mt "--maxthreads"
@@ -12,12 +13,17 @@ int nbFiles =0;
 int printAll = 0;
 int maxThreads = 1;
 int stdinAvailable = 1;
+const char *STDIN = "stdin";
+const char *delim = " ";
 
 pthread_mutex_t mutex_buffer;
 pthread_mutex_t mutex_closing;
 sem_t empty;
 
-struct fract *buffer;
+pthread_t *readThreads;
+pthread_t *computeThreads;
+
+struct fractal **buffer;
 int isReading;
 
 
@@ -26,19 +32,19 @@ void *readerFunc(void *param) {
   FILE *fichier = NULL;
 
   fichier = fopen((char *) param, "r");
-  if (fichier == NULL) fprintf(stderr, "Erreur lors de l'ouverture du fichier : %s\n", (char *) param);
+  if (fichier == NULL) fprintf(stderr, "Erreur lors de l'ouverture du fichier  : %s\n", (char *) param);
   char current[MAXLEN];
   while (fgets(current, MAXLEN, fichier) != NULL){
     if (current[0] != '\n' && current[0] != '#'){
       //Production de l item
-      char *n = strtok(str, delim);
+      char *n = strtok(current, delim);
       char *name = (char *) malloc(strlen(n) * sizeof(char));
       name = n;
       int w = atoi(strtok(NULL, delim));
       int h = atoi(strtok(NULL, delim));
       double a = atof(strtok(NULL, delim));
       double b = atoi(strtok(NULL, delim));
-      struct fract *temp = fractal_new(name, w, h, a, b);
+      struct fractal *temp = fractal_new(name, w, h, a, b);
 
       sem_wait(&empty);
       pthread_mutex_lock(&mutex_buffer);
@@ -59,7 +65,7 @@ void *readerFunc(void *param) {
 
   //On essaie de fermer le fichier
   int err = fclose(fichier);
-  if (err != 0) fprintf(stderr, "Erreur lors de la fermeture du fichier : %s\n", (char *) param);
+  if (err != 0) fprintf(stderr, "Erreur lors de la fermeture du fichier : %s\n",   (char *) param);
 
   //Pour marquer qu'on a bien ferme le fichier
   pthread_mutex_lock(&mutex_closing);
@@ -72,29 +78,30 @@ void *readerFunc(void *param) {
 
 //CONSOMMATEUR
 void *computeFunc (void *param) {
-  int arg = (int *) param; //La case du buffer qui lui est attribuee
-  struct fract *best = NULL;//La fractale avec la meilleure moyenne
+  int *arg = (int *) param; //La case du buffer qui lui est attribuee
+  struct fractal *best = NULL;//La fractale avec la meilleure moyenne
   int bestAverage = 0; //La valeur de la meilleure moyenne
 
-  while (isReading != 0 || buffer[arg] != NULL) {
-    struct fract *temp;
-    while (buffer[arg] == NULL) {} //Pas besoin d'aller plus loin si il n'y a rien a traiter pour notre thread
+  while (isReading != 0 || buffer[*arg] != NULL) {
+    struct fractal *temp;
+    while (buffer[*arg] == NULL) {} //Pas besoin d'aller plus loin si il
+                                    //n'y a rien a traiter pour notre thread
 
     pthread_mutex_lock(&mutex_buffer);
     //Section Critique
-    temp = buffer[arg];
-    buffer[arg] = NULL;
+    temp = buffer[*arg];
+    buffer[*arg] = NULL;
     pthread_mutex_unlock(&mutex_buffer);
     sem_post(&empty);
 
     int w = fractal_get_width(temp);
     int h = fractal_get_height(temp);
     double average = 0;
-    double total = w * f;
+    double total = w * h;
 
     for (int x = 0; x < w; x++) {
       for (int y = 0; y < h; y++) {
-        int val = fractal_compute_value(temp, x, y)
+        int val = fractal_compute_value(temp, x, y);
         average += val;
         fractal_set_value(temp, x, y, val);
       }
@@ -107,7 +114,7 @@ void *computeFunc (void *param) {
     if (printAll) write_bitmap_sdl(temp, temp->name);
 
     if ( average > bestAverage) {
-      fractal_free(best);
+        fractal_free(best);
       best = temp;
       bestAverage = average;
     }
@@ -138,7 +145,7 @@ int main(int argc, char const *argv[]) {
             fprintf(stderr, "L'entree standard a ete indiquee plusieurs fois comme source. Elle n'est prise en compte qu'une fois\n");
         else {
           if (strcmp(argv[i], "-") == 0) stdinAvailable = 0;
-          files[nbFiles] = argv[i];
+          files[nbFiles] = STDIN;
           nbFiles++;
         }
       }
@@ -150,27 +157,27 @@ int main(int argc, char const *argv[]) {
   printf("Fichier de sortie : %s\n", fileOut);
   for (int i = 0; i < nbFiles; i++) printf("Fichier de donnee n° %i : %s\n", i+1, files[i]);
 
-  //Initialisation des semaphores et du mutex
-  pthread_mutex_init(&mutex, NULL);
-  sem_init(&empty, 0, N);
-  sem_init(&full, 0,0);
-  buffer = (struct fract *) malloc(maxThreads * sizeof(struct fract));
+  //Initialisation des semaphores et des mutex
+  pthread_mutex_init(&mutex_buffer, NULL);
+  pthread_mutex_init(&mutex_closing, NULL);
+  sem_init(&empty, 0, maxThreads);
+  //sem_init(&full, 0,0);
+  buffer = (struct fractal **) malloc(maxThreads * sizeof(struct fractal *));
   isReading = nbFiles;
 
-  pthread_t readThreads[nbFiles]
-  pthread_t computeThreads[maxThreads];
+  readThreads = (pthread_t *) malloc(nbFiles * sizeof(pthread_t));
+  computeThreads = (pthread_t *) malloc(maxThreads * sizeof(pthread_t));
   int arg[maxThreads];
   int err;
 
+  if (!stdinAvailable) {
+    printf("Pour entrer du texte sur stdin, respecter le schema \"name w h a b\"\n");
+    printf("Pour terminer, appuyez sur ctrl + D sous Linux et ctrl + Z sous Windows\n");
+  }
+
   for (int i = 0; i < nbFiles; i++) {
-    if (strcmp(argv[i])==0) {
-      err = pthread_create(&(readThreads[i]), NULL, &stdReaderFunc, NULL);
-      if (err != 0) fprintf(stderr, "Erreur lors de la creation du reader n° %i (Entree standard)\n", i);
-    }
-    else {
       err = pthread_create(&(readThreads[i]), NULL, &readerFunc, &(files[i]));
       if (err != 0) fprintf(stderr, "Erreur lors de la creation du reader n° %i\n", i);
-    }
   }
 
   for (int i = 0; i < maxThreads; i++) {
@@ -179,12 +186,12 @@ int main(int argc, char const *argv[]) {
     if (err != 0) fprintf(stderr, "Erreur lors de la creation du thread de calcul n° %i\n", i);
   }
 
-  struct fract *best;
+  struct fractal *best;
   err=pthread_join(computeThreads[0], (void **) &best);
   if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° 1\n");
 
   for (int i = 1; i < maxThreads; i++) {
-    struct fract *temp;
+    struct fractal *temp;
     err=pthread_join(computeThreads[0], (void **) &temp);
     if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° %i\n", i);
     if (best->average < temp->average) {
@@ -194,7 +201,7 @@ int main(int argc, char const *argv[]) {
     else fractal_free(temp);
   }
 
-    err = write_bitmap_sdl(best, &fileOut);
+    err = write_bitmap_sdl(best, fileOut);
     if (err != 0) fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
     return err;
 }
