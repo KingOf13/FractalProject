@@ -1,5 +1,5 @@
 CC = gcc
-FLAG = -lpthread -lsdl
+FLAG = -lpthread -lSDL
 
 all: main
 
