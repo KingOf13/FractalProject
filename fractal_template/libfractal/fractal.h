@@ -28,6 +28,10 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
  */
 void fractal_free(struct fractal *f);
 
+
+
+
+
 /*
  * fractal_get_name: retourne le nom de la fractale
  *
@@ -35,6 +39,21 @@ void fractal_free(struct fractal *f);
  * @return: nom de la fractale
  */
 const char *fractal_get_name(const struct fractal *f);
+
+/*
+
+/!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\
+
+L’ensemble des fonctions ci-dessus forment la librairie libfractal et les détails
+des paramètres sont indiqués dans le fichier fractal.h. Cette librairie doit pouvoir
+se compiler de manière indépendante, et votre programme principal doit venir se greffer
+dessus.
+
+C'est ce qui est dit dans le consigne du coup est ce qu'on peut reelement rajouter une fonction?
+
+*/
+
+
 
 /*
  * fractal_get_value: retourne la valeur correspondant à un pixel de l'image

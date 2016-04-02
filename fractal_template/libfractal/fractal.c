@@ -18,13 +18,13 @@ int **talloc(int w, int h) {
 
 struct fractal *fractal_new(const char *name, int width, int height, double a, double b)
 {
-    struct fractal *new = (struct fractal *) malloc(sizeof(fractal));
+    struct fractal *new = (struct fractal *) malloc(sizeof(struct fractal));
     if (new == NULL) exit(EXIT_FAILURE);
     new->a = a;
     new->b = b;
     new->w = width;
     new->h = height;
-    new->grid = talloc(w, h);
+    new->grid = talloc(width, height);
     new->name = name;
     return new;
 }
@@ -32,8 +32,8 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
 void fractal_free(struct fractal *f)
 {
     int **matrix = f->grid;
-    for (int i = 0; i < new->w; i ++) free(matrix[i]);
-    free(name);
+    for (int i = 0; i < f->w; i ++) free(matrix[i]);
+    free(f->name);
     free(f);
 }
 

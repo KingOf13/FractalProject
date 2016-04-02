@@ -4,9 +4,9 @@ Un thread de lecture par fichier d’entrée
 
 Système de producteur consommateur
 
-On remplit un tableau d’ordre N avec les description des fractales (si il est plein, les lecteurs attendent)
+On remplit un tableau d’ordre N avec les description des fractales (si il est plein, les threads de lecture attendent)
 
-Les N threads de calcul pop et calculent les fractales, ainsi que leur moyenne. Ils gardent en mémoire la fractale avec la moyenne le plus haute qu’il on vu passé.
+Les N threads de calcul pop et calculent les fractales, ainsi que leur moyenne. Ils gardent en mémoire la fractale avec la moyenne le plus haute qu’ils ont vu passer.
 
 Une fois que toute les fractales ont été calculée. Il reste N fractales.
 

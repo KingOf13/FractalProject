@@ -1,12 +1,19 @@
 CC = gcc
-FLAG = -lpthread -lSDL
+FLAG = -lpthread -lSDL -Wall -Werror
+LIB = libfractal/fractal.o libfractal/tools.o
 
-all: main
+all: main clean
+	@echo YOUHOUHOU!!!! CA COMPILE MAGGLE!!
 
-main: main.c
-	@clear
-	@clear
-	@gcc main.c -o main -Wall -Werror $(FLAG)
+main: main.o
+		@$(CC) -o main main.o $(LIB) $(FLAG)
 
-mrproper:
-	@rm main -f
+main.o: main.c libfractal/fractal.h
+		@$(CC) -c main.c -o main.o
+
+
+clean:
+		@rm -rf *.o
+
+mrproper: clean
+	@rm -rf main
