@@ -115,8 +115,9 @@ int main(int argc, char const *argv[]) {
 //PRODUCTEUR
 void *readerFunc(void *param) {
   FILE *fichier = NULL;
-
-  fichier = fopen((char *) param, "r");
+  //const char* nomfichier = (char *) param;
+  //fichier = fopen(nomfichier, "r");
+  fichier = fopen("exemple_fractales", "r");
   if (fichier == NULL) fprintf(stderr, "Erreur lors de l'ouverture du fichier  : %s\n", (char *) param);
   char current[MAXLEN];
   while (fgets(current, MAXLEN, fichier) != NULL){
