@@ -111,6 +111,7 @@ int main(int argc, char const *argv[]) {
     return err;
 }
 
+
 //PRODUCTEUR
 void *readerFunc(void *param) {
   FILE *fichier = NULL;
