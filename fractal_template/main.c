@@ -141,7 +141,9 @@ void *readerFunc(void *param) {
       int w = atoi(strtok(NULL, delim));
       int h = atoi(strtok(NULL, delim));
       double a = atof(strtok(NULL, delim));
+      //printf("double a  = %f\n",a);
       double b = atof(strtok(NULL, delim));
+      //printf("double b  = %f\n",b);
       struct fractal *temp = fractal_new(name, w, h, a, b);
 
       sem_wait(&empty);
