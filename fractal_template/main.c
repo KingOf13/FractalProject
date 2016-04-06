@@ -211,7 +211,10 @@ void *computeFunc (void *param) {
 
     temp->average = average;
 
-    if (printAll) write_bitmap_sdl(temp, temp->name);
+    char *name = "";
+    strcopy(name, temp->name);
+    strcat(name, ".bmp");
+    if (printAll) write_bitmap_sdl(temp, name);
 
     if ( average > bestAverage) {
       fractal_free(best);
