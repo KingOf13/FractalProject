@@ -123,6 +123,7 @@ int main(int argc, char const *argv[]) {
 void *readerFunc(void *param) {
   FILE *fichier = NULL;
   const char* nomfichier = (char *) param;
+  printf("%s\n", nomfichier);
   if (strcmp(nomfichier, STDIN) == 0) {
     fichier = stdin;
   }
@@ -212,7 +213,7 @@ void *computeFunc (void *param) {
     temp->average = average;
 
     char *name = "";
-    strcopy(name, temp->name);
+    strcpy(name, temp->name);
     strcat(name, ".bmp");
     if (printAll) write_bitmap_sdl(temp, name);
 
@@ -221,9 +222,11 @@ void *computeFunc (void *param) {
       best = temp;
       bestAverage = average;
     }
+
     else {
       fractal_free(temp);
     }
+
   }
 
   return best;
