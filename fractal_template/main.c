@@ -9,6 +9,12 @@
 #define mt "--maxthreads"
 #define MAXLEN 1000
 
+/*
+Notes :
+  - Si le fichier ne contient que une ligne de commentaire --> La fonction attend et ne fait rien
+  - Idem si le fichier est vide (Astuce Tuer le processus - Moniteur systeme --> main)
+*/
+
 int nbFiles =0;
 int printAll = 0;
 int maxThreads = 1;
@@ -28,8 +34,6 @@ pthread_t *computeThreads;
 
 struct fractal **buffer;
 int isReading;
-
-// J'ai mis main au dessus c'est plus logique quand on lit le code
 
 int main(int argc, char const *argv[]) {
   const char *files[argc];
@@ -65,10 +69,9 @@ int main(int argc, char const *argv[]) {
   }
 
   printf("Nombre de fichier : %i\n", nbFiles);
-  printf("Doit on tout imprimer ? : %i\n", printAll);
+  printf("Doit on tout imprimer ? : "); if(printAll) printf("Oui\n"); else printf("Non\n");
   printf("Fichier de sortie : %s\n", fileOut);
   for (int i = 0; i < nbFiles; i++) printf("Fichier de donnee n° %i : %s\n", i+1, files[i]);
-
   //Initialisation des semaphores et des mutex
   pthread_mutex_init(&mutex_buffer, NULL);
   pthread_mutex_init(&mutex_closing, NULL);
@@ -86,8 +89,18 @@ int main(int argc, char const *argv[]) {
     printf("Pour entrer du texte sur stdin, respecter le schema \"name w h a b\"\n");
     printf("Pour terminer, appuyez sur ctrl + D sous Linux et ctrl + Z sous Windows\n");
   }
-
   for (int i = 0; i < nbFiles; i++) {
+
+      //err = pthread_create(&(readThreads[i]), NULL, readerFunc, &(files[i]));
+      /*
+      Ici un probleme ce pose car on donne un pointeur ver l'argument a pthread_create
+      Mais l'argument est lui meme un pointeur
+      Donc ca fonctionne Pas
+      */
+      printf("\n(files[i]) = %s\n",(files[i]));
+      printf("&(files[i]) = %p\n",&(files[i]));
+      printf("*(&(files[i])) = %s\n\n",*(&(files[i])));
+
       err = pthread_create(&(readThreads[i]), NULL, readerFunc, &(files[i]));
       if (err != 0) fprintf(stderr, "Erreur lors de la creation du reader n° %i\n", i);
   }
@@ -121,8 +134,21 @@ int main(int argc, char const *argv[]) {
 
 //PRODUCTEUR
 void *readerFunc(void *param) {
+
   FILE *fichier = NULL;
+  printf("param = %p\n",param);
+
+  // Provoque une erreur de segmentation
+  char * nam = (char *) param;
+  printf("nam = %p\n",nam);
+  
   const char* nomfichier = (char *) param;
+
+  //printf("(char *) param = %s\n",(char *) param);
+  //printf("nomfichier = %s\n",nomfichier);
+  //const char* nomfichier = "exemple_fractales.txt";
+
+
   if (strcmp(nomfichier, STDIN) == 0) {
     fichier = stdin;
   }
@@ -133,46 +159,42 @@ void *readerFunc(void *param) {
   char current[MAXLEN];
   while (fgets(current, MAXLEN, fichier) != NULL){
     if (current[0] != '\n' && current[0] != '#'){
-
-      //Production de l item
-      char *n = strtok(current, delim);
-      char *name = (char *) malloc(strlen(n) * sizeof(char));
-      name = n;
-      int w = atoi(strtok(NULL, delim));
-      int h = atoi(strtok(NULL, delim));
-      double a = atof(strtok(NULL, delim));
-      //printf("double a  = %f\n",a);
-      double b = atof(strtok(NULL, delim));
-      //printf("double b  = %f\n",b);
-      struct fractal *temp = fractal_new(name, w, h, a, b);
-
-      sem_wait(&empty);
-      pthread_mutex_lock(&mutex_buffer);
-      //Section Critique
-
-      int placed = 0;
-      for (int i = 0; !placed; i++) {
-        if (buffer[i] == NULL) {
-          buffer[i] = temp;
-          placed ++;
-        }
+    //Production de l item
+    char *n = strtok(current, delim);
+    char *name = (char *) malloc(strlen(n) * sizeof(char));
+    name = n;
+    int w = atoi(strtok(NULL, delim));
+    int h = atoi(strtok(NULL, delim));
+    double a = atof(strtok(NULL, delim));
+    double b = atof(strtok(NULL, delim));
+    struct fractal *temp = fractal_new(name, w, h, a, b);
+    sem_wait(&empty);
+    pthread_mutex_lock(&mutex_buffer);
+    //Section Critique
+    int placed = 0;
+    for (int i = 0; !placed; i++) {
+      if (buffer[i] == NULL) {
+        buffer[i] = temp;
+        placed ++;
       }
-      //La structure a été placée pour le calcul : fin de la Section Critique
-      pthread_mutex_unlock(&mutex_buffer);
-
     }
+    //La structure a été placée pour le calcul : fin de la Section Critique
+    pthread_mutex_unlock(&mutex_buffer);
   }
+}
 
   //On essaie de fermer le fichier
   int err = fclose(fichier);
-  if (err != 0) fprintf(stderr, "Erreur lors de la fermeture du fichier : %s\n",   (char *) param);
-
+  if (err != 0)
+  {
+    fprintf(stderr, "Erreur lors de la fermeture du fichier : %s\n",   (char *) param);
+  }
   //Pour marquer qu'on a bien ferme le fichier
   pthread_mutex_lock(&mutex_closing);
   isReading--;
   pthread_mutex_unlock(&mutex_closing);
-
   return NULL;
+
 }
 
 
@@ -180,7 +202,7 @@ void *readerFunc(void *param) {
 void *computeFunc (void *param) {
   int *arg = (int *) param; //La case du buffer qui lui est attribuee
   struct fractal *best = NULL;//La fractale avec la meilleure moyenne
-  int bestAverage = 0; //La valeur de la meilleure moyenne
+  double bestAverage = 0; //La valeur de la meilleure moyenne
 
   while (isReading != 0 || buffer[*arg] != NULL) {
     struct fractal *temp;
@@ -211,11 +233,13 @@ void *computeFunc (void *param) {
 
     temp->average = average;
 
-    char *name = "";
-    strcopy(name, temp->name);
+    char n[1000] = "";
+    char *name = n;
+    strcpy(name, temp->name);
     strcat(name, ".bmp");
     if (printAll) write_bitmap_sdl(temp, name);
-
+    //printf("average = %f\n",average);
+    //printf("bestAverage = %f\n",bestAverage);
     if ( average > bestAverage) {
       fractal_free(best);
       best = temp;
@@ -225,6 +249,5 @@ void *computeFunc (void *param) {
       fractal_free(temp);
     }
   }
-
   return best;
 }

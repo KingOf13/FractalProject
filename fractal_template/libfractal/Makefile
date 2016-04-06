@@ -13,3 +13,6 @@ $(LIBFILE): $(OBJ)
 
 *.o:
 	$(CC) -o $@ -c $< $(CFLAGS)
+
+clean :
+	@rm -rf fractal.o tools.o libfractal.a

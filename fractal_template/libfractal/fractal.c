@@ -31,10 +31,17 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
 
 void fractal_free(struct fractal *f)
 {
-    int **matrix = f->grid;
-    for (int i = 0; i < f->w; i ++) free(matrix[i]);
-    free(f->name);
-    free(f);
+  /*
+  Continue a buggé
+  A revoir
+  */
+  if(f==NULL){
+    return;
+  }
+  int **matrix = f->grid;
+  for (int i = 0; i < f->w; i ++) free(matrix[i]);
+  free(f->name);
+  free(f);
 }
 
 int fractal_get_value(const struct fractal *f, int x, int y)
