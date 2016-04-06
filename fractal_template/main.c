@@ -12,7 +12,7 @@
 int nbFiles =0;
 int printAll = 0;
 int maxThreads = 1;
-int stdinAvailable = 1;
+int stdinUsed = 0;
 const char *STDIN = "stdin";
 const char *delim = " ";
 
@@ -46,11 +46,18 @@ int main(int argc, char const *argv[]) {
         i++; // et on saute une case du tableau d'arguments
       }
       else { // Si ce n'est ni un -d ni un --maxthreads, c'est un nom de fichier
-        if (!stdinAvailable && (strcmp(argv[i], "-") == 0))
+        if ((strcmp(argv[i], "-") == 0)) {
+          if (stdinUsed) {
             fprintf(stderr, "L'entree standard a ete indiquee plusieurs fois comme source. Elle n'est prise en compte qu'une fois\n");
+          }
+          else {
+            stdinUsed = 1;
+            files[nbFiles] = STDIN;
+            nbFiles++;
+          }
+        }
         else {
-          if (strcmp(argv[i], "-") == 0) stdinAvailable = 0;
-          files[nbFiles] = STDIN;
+          files[nbFiles] = argv[i];
           nbFiles++;
         }
       }
@@ -75,7 +82,7 @@ int main(int argc, char const *argv[]) {
   int arg[maxThreads];
   int err;
 
-  if (!stdinAvailable) {
+  if (stdinUsed) {
     printf("Pour entrer du texte sur stdin, respecter le schema \"name w h a b\"\n");
     printf("Pour terminer, appuyez sur ctrl + D sous Linux et ctrl + Z sous Windows\n");
   }
@@ -115,13 +122,18 @@ int main(int argc, char const *argv[]) {
 //PRODUCTEUR
 void *readerFunc(void *param) {
   FILE *fichier = NULL;
-  //const char* nomfichier = (char *) param;
-  //fichier = fopen(nomfichier, "r");
-  fichier = fopen("exemple_fractales", "r");
+  const char* nomfichier = (char *) param;
+  if (strcmp(nomfichier, STDIN) == 0) {
+    fichier = stdin;
+  }
+  else {
+    fichier = fopen(nomfichier, "r");
+  }
   if (fichier == NULL) fprintf(stderr, "Erreur lors de l'ouverture du fichier  : %s\n", (char *) param);
   char current[MAXLEN];
   while (fgets(current, MAXLEN, fichier) != NULL){
     if (current[0] != '\n' && current[0] != '#'){
+
       //Production de l item
       char *n = strtok(current, delim);
       char *name = (char *) malloc(strlen(n) * sizeof(char));
