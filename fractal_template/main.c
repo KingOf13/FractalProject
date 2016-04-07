@@ -199,8 +199,6 @@ void *computeFunc (void *param) {
     int h = fractal_get_height(temp);
     double average = 0;
     double total = w * h;
-    printf("  Test - a = %f\n",temp->a);
-    printf("  Test - b = %f\n",temp->b);
     for (int x = 0; x < w; x++) {
       for (int y = 0; y < h; y++) {
         int val = fractal_compute_value(temp, x, y);
