@@ -97,10 +97,10 @@ int main(int argc, char const *argv[]) {
       Mais l'argument est lui meme un pointeur
       Donc ca fonctionne Pas
       */
-      printf("\n(files[i]) = %s\n",(files[i]));
-      printf("&(files[i]) = %p\n",&(files[i]));
-      printf("*(&(files[i])) = %s\n\n",*(&(files[i])));
-
+      printf("\n    (files[i]) = %s\n",(files[i]));
+      printf("    &(files[i]) = %p\n",&(files[i]));
+      printf("    *(&(files[i])) = %s\n\n",*(&(files[i])));
+      printf("    err = pthread_create(&(readThreads[i]), NULL, readerFunc, &(files[i]));\n\n");
       err = pthread_create(&(readThreads[i]), NULL, readerFunc, &(files[i]));
       if (err != 0) fprintf(stderr, "Erreur lors de la creation du reader n° %i\n", i);
   }
@@ -136,16 +136,15 @@ int main(int argc, char const *argv[]) {
 void *readerFunc(void *param) {
 
   FILE *fichier = NULL;
-  printf("param = %p\n",param);
+  printf("    void *readerFunc(void *param)\n\n");
+  printf("    param = %p\n",param);
 
   // Provoque une erreur de segmentation
   char * nam = (char *) param;
-  printf("nam = %p\n",nam);
-  
-  const char* nomfichier = (char *) param;
+  printf("    nam =   %p\n",nam);
 
+  const char* nomfichier = (char *) param;
   //printf("(char *) param = %s\n",(char *) param);
-  //printf("nomfichier = %s\n",nomfichier);
   //const char* nomfichier = "exemple_fractales.txt";
 
 
