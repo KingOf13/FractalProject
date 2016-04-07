@@ -91,17 +91,7 @@ int main(int argc, char const *argv[]) {
   }
   for (int i = 0; i < nbFiles; i++) {
 
-      //err = pthread_create(&(readThreads[i]), NULL, readerFunc, &(files[i]));
-      /*
-      Ici un probleme ce pose car on donne un pointeur ver l'argument a pthread_create
-      Mais l'argument est lui meme un pointeur
-      Donc ca fonctionne Pas
-      */
-      printf("\n    (files[i]) = %s\n",(files[i]));
-      printf("    &(files[i]) = %p\n",&(files[i]));
-      printf("    *(&(files[i])) = %s\n\n",*(&(files[i])));
-      printf("    err = pthread_create(&(readThreads[i]), NULL, readerFunc, &(files[i]));\n\n");
-      err = pthread_create(&(readThreads[i]), NULL, readerFunc, &(files[i]));
+      err = pthread_create(&(readThreads[i]), NULL, readerFunc,(void *)files[i]);
       if (err != 0) fprintf(stderr, "Erreur lors de la creation du reader n° %i\n", i);
   }
 
@@ -136,17 +126,7 @@ int main(int argc, char const *argv[]) {
 void *readerFunc(void *param) {
 
   FILE *fichier = NULL;
-  printf("    void *readerFunc(void *param)\n\n");
-  printf("    param = %p\n",param);
-
-  // Provoque une erreur de segmentation
-  char * nam = (char *) param;
-  printf("    nam =   %p\n",nam);
-
   const char* nomfichier = (char *) param;
-  //printf("(char *) param = %s\n",(char *) param);
-  //const char* nomfichier = "exemple_fractales.txt";
-
 
   if (strcmp(nomfichier, STDIN) == 0) {
     fichier = stdin;
@@ -219,7 +199,8 @@ void *computeFunc (void *param) {
     int h = fractal_get_height(temp);
     double average = 0;
     double total = w * h;
-
+    printf("  Test - a = %f\n",temp->a);
+    printf("  Test - b = %f\n",temp->b);
     for (int x = 0; x < w; x++) {
       for (int y = 0; y < h; y++) {
         int val = fractal_compute_value(temp, x, y);
