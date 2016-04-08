@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include "fractal.h"
 
-int **talloc(int w, int h);
-
 int **talloc(int w, int h) {
   int **matrix;
 
@@ -11,8 +9,8 @@ int **talloc(int w, int h) {
 
   for( int i = 0 ; i < w ; i++ )
   {
-    matrix[i] = (int *) malloc (h * sizeof(int));
-    if( matrix[i] == NULL ) exit(EXIT_FAILURE);
+       matrix[i] = (int *) malloc (h * sizeof(int));
+       if( matrix[i] == NULL ) exit(EXIT_FAILURE);
   }
 
   return matrix;
@@ -31,7 +29,6 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
     return new;
 }
 
-
 void fractal_free(struct fractal *f)
 {
   /*
@@ -43,7 +40,6 @@ void fractal_free(struct fractal *f)
   }
   int **matrix = f->grid;
   for (int i = 0; i < f->w; i ++) free(matrix[i]);
-  free(f->grid);
   free(f->name);
   free(f);
 }

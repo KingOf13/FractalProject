@@ -3,7 +3,7 @@
 
 struct fractal {
   char *name;
-  double a,b;
+  int a,b;
   int w,h;
   double average;
   int **grid;
