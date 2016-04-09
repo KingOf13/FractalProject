@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -128,8 +129,6 @@ void *readerFunc(void *param) {
   FILE *fichier = NULL;
   const char* nomfichier = (char *) param;
 
-  printf("%s\n", nomfichier);
-
   if (strcmp(nomfichier, STDIN) == 0) {
     fichier = stdin;
   }
@@ -201,6 +200,8 @@ void *computeFunc (void *param) {
     int h = fractal_get_height(temp);
     double average = 0;
     double total = w * h;
+    //printf("  Test - a = %f\n",temp->a);
+    //printf("  Test - b = %f\n",temp->b);
     for (int x = 0; x < w; x++) {
       for (int y = 0; y < h; y++) {
         int val = fractal_compute_value(temp, x, y);
@@ -213,7 +214,6 @@ void *computeFunc (void *param) {
 
     temp->average = average;
 
-    char *name = "";
     char n[1000] = "";
     char *name = n;
     strcpy(name, temp->name);
@@ -226,11 +226,9 @@ void *computeFunc (void *param) {
       best = temp;
       bestAverage = average;
     }
-
     else {
       fractal_free(temp);
     }
-
   }
   return best;
 }
