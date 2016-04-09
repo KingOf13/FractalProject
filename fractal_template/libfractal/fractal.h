@@ -6,7 +6,7 @@ struct fractal {
   double a,b;
   int w,h;
   double average;
-  int **grid;
+  int *grid;
 };
 
 /*
