@@ -15,3 +15,6 @@ clean:
 
 mrproper: clean
 	@rm -rf main
+
+exemple:
+	@./main -d --maxthreads 4 exemple_fractales.txt best.bmp

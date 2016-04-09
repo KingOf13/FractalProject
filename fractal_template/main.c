@@ -213,7 +213,6 @@ void *computeFunc (void *param) {
 
     temp->average = average;
 
-    char *name = "";
     char n[1000] = "";
     char *name = n;
     strcpy(name, temp->name);
