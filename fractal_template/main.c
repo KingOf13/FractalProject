@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -216,7 +215,7 @@ void *computeFunc (void *param) {
 
     char n[1000] = "";
     char *name = n;
-    strcpy(name, temp->name);
+    strcpy(name, temp->name);//INTERDIT!!!! Parait que c'est ce que le prof a dit
     strcat(name, ".bmp");
     if (printAll) write_bitmap_sdl(temp, name);
     //printf("average = %f\n",average);
