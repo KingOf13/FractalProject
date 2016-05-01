@@ -106,15 +106,16 @@ int main(int argc, char const *argv[]) {
 
   for (int i = 1; i < maxThreads; i++) {
     struct fractal *temp;
-    err=pthread_join(computeThreads[0], (void **) &temp);
+    err=pthread_join(computeThreads[i], (void **) &temp);
     if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° %i\n", i);
     if (best->average < temp->average) {
-      fractal_free(best);
+      printf("Récupération de best du thread %i\n",i);
+      //fractal_free(best);
       best = temp;
     }
     else
     {
-      fractal_free(temp);
+      //fractal_free(temp);
     }
   }
 
@@ -187,7 +188,10 @@ void *computeFunc (void *param) {
 
   while (isReading != 0 || buffer[*arg] != NULL) {
     struct fractal *temp;
-    while (buffer[*arg] == NULL) {} //Pas besoin d'aller plus loin si il
+    while (buffer[*arg] == NULL) {
+      printf("Conso en attente\n");
+      sleep(1);
+    } //Pas besoin d'aller plus loin si il
     //n'y a rien a traiter pour notre thread
 
     pthread_mutex_lock(&mutex_buffer);
@@ -223,7 +227,7 @@ void *computeFunc (void *param) {
     //printf("average = %f\n",average);
     //printf("bestAverage = %f\n",bestAverage);
     if ( average > bestAverage) {
-      fractal_free(best);
+      //fractal_free(best);
       best = temp;
       bestAverage = average;
     }
