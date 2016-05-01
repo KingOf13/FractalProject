@@ -21,8 +21,14 @@ mrproper: clean cleanV
 	@rm -rf main
 
 
-exemple:
+exemple1:
 	@./main -d --maxthreads 4 ../exemple_fractales.txt ../best.bmp
+
+exemple2:
+		@./main ../exemple_fractales.txt ../out.bmp
+
+exemple3:
+	@./main ../exemple_fractales_original ../out.bmp
 
 valgrind :
 	@G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --leak-check=full --num-callers=40 --log-file=valgrind.log ./main $(ARG)

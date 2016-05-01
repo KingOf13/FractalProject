@@ -27,9 +27,6 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
 
 void fractal_free(struct fractal *f)
 {
-  if(f==NULL){
-    return;
-  }
   free(f->grid);
   free(f->name);
   free(f);
