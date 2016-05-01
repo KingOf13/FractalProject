@@ -2,6 +2,7 @@ CC = gcc
 FLAG = -lpthread -lSDL -Wall -Werror -g
 LIB = libfractal/fractal.o libfractal/tools.o
 ARG = ../exemple_fractales.txt ../out.bmp
+MT = --maxthreads 4
 
 all: main clean
 
@@ -28,7 +29,7 @@ exemple2:
 		@./main ../exemple_fractales.txt ../out.bmp
 
 exemple3:
-	@./main ../exemple_fractales_original ../out.bmp
+	@./main $(MT) ../exemple_fractales_original ../out.bmp
 
 valgrind :
 	@G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --leak-check=full --num-callers=40 --log-file=valgrind.log ./main $(ARG)

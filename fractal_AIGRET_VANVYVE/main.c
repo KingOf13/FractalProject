@@ -112,7 +112,10 @@ int main(int argc, char const *argv[]) {
       fractal_free(best);
       best = temp;
     }
-    else fractal_free(temp);
+    else
+    {
+      fractal_free(temp);
+    }
   }
 
     err = write_bitmap_sdl(best, fileOut);
@@ -225,7 +228,9 @@ void *computeFunc (void *param) {
       bestAverage = average;
     }
     else {
-      fractal_free(temp);
+      // Provoque *** Error in `./main': double free or corruption (out): 0x00007f3cafb58aa0 ***
+      //fractal_free(temp);
+      // mise en commentaire pour debug l'erreur suivante
     }
   }
   return best;
