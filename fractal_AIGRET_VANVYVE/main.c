@@ -24,7 +24,6 @@ const char *delim = " ";
 
 void *readerFunc(void *param);
 void *computeFunc (void *param);
-
 pthread_mutex_t mutex_buffer;
 pthread_mutex_t mutex_closing;
 sem_t empty;
