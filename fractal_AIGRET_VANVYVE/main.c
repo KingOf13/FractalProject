@@ -109,6 +109,8 @@ int main(int argc, char const *argv[]) {
   err=pthread_join(computeThreads[0], (void **) &best);
   if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° 1\n");
 
+  printf("ENTREE DANS LE RETOUR\n");
+
   for (int i = 1; i < maxThreads; i++) {
     struct fractal *temp;
     err=pthread_join(computeThreads[i], (void **) &temp);
@@ -124,9 +126,11 @@ int main(int argc, char const *argv[]) {
     }
   }
   */
-  err = write_bitmap_sdl(best, fileOut);
-  if (err != 0) fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
-  return err;
+
+  printf("SORTIE DU RETOUR\n");
+    err = write_bitmap_sdl(best, fileOut);
+    if (err != 0) fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
+    return err;
 }
 
 
@@ -217,7 +221,6 @@ void *computeFunc (void *param) {
         average += val;
         fractal_set_value(temp, x, y, val);
       }
-    }
 
     average = average / total;
 
@@ -260,6 +263,7 @@ void *computeFunc (void *param) {
       printf("temp->average = %f\n",temp->average);
       printf("Tentative de free %s\n",temp->name);
       fractal_free(temp);
+
     }
     pthread_mutex_unlock(&mutex_best);
   }
