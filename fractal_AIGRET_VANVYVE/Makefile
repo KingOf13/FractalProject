@@ -1,4 +1,3 @@
-CC = gcc
 FLAG = -lpthread -lSDL -Wall -Werror -g
 LIB = libfractal/fractal.o libfractal/tools.o
 ARG = ../exemple_fractales.txt ../out.bmp
@@ -7,10 +6,10 @@ MT = --maxthreads 4
 all: main clean
 
 main: main.o
-		@$(CC) -o main main.o $(LIB) $(FLAG)
+		@gcc -o main main.o $(LIB) $(FLAG)
 
 main.o: main.c libfractal/fractal.h
-		@$(CC) -c main.c -o main.o
+		@gcc -c main.c -o main.o
 
 clean:
 		@rm -rf *.o

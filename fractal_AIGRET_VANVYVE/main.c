@@ -21,11 +21,15 @@ int maxThreads = 1;
 int stdinUsed = 0;
 const char *STDIN = "stdin";
 const char *delim = " ";
+struct fractal *best = NULL; // On stock la meilleure fractale dans une variable globale
+double bestAverage = 0;
+
 
 void *readerFunc(void *param);
 void *computeFunc (void *param);
 pthread_mutex_t mutex_buffer;
 pthread_mutex_t mutex_closing;
+pthread_mutex_t mutex_best;
 sem_t empty;
 
 pthread_t *readThreads;
@@ -100,7 +104,8 @@ int main(int argc, char const *argv[]) {
     if (err != 0) fprintf(stderr, "Erreur lors de la creation du thread de calcul n° %i\n", i);
   }
 
-  struct fractal *best;
+  //struct fractal *best;
+  /*
   err=pthread_join(computeThreads[0], (void **) &best);
   if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° 1\n");
 
@@ -110,18 +115,18 @@ int main(int argc, char const *argv[]) {
     if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° %i\n", i);
     if (best->average < temp->average) {
       printf("Récupération de best du thread %i\n",i);
-      //fractal_free(best);
+      fractal_free(best);
       best = temp;
     }
     else
     {
-      //fractal_free(temp);
+      fractal_free(temp);
     }
   }
-
-    err = write_bitmap_sdl(best, fileOut);
-    if (err != 0) fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
-    return err;
+  */
+  err = write_bitmap_sdl(best, fileOut);
+  if (err != 0) fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
+  return err;
 }
 
 
@@ -183,14 +188,15 @@ void *readerFunc(void *param) {
 //CONSOMMATEUR
 void *computeFunc (void *param) {
   int *arg = (int *) param; //La case du buffer qui lui est attribuee
-  struct fractal *best = NULL;//La fractale avec la meilleure moyenne
-  double bestAverage = 0; //La valeur de la meilleure moyenne
+  //struct fractal *best= NULL; //La fractale avec la meilleure moyenne
+  //double bestAverage = 0; //La valeur de la meilleure moyenne
 
   while (isReading != 0 || buffer[*arg] != NULL) {
     struct fractal *temp;
     while (buffer[*arg] == NULL) {
-      printf("Conso en attente\n");
-      sleep(1);
+      //printf("TEST\n");
+      //printf("Conso en attente\n");
+      //sleep(1);
     } //Pas besoin d'aller plus loin si il
     //n'y a rien a traiter pour notre thread
 
@@ -205,8 +211,6 @@ void *computeFunc (void *param) {
     int h = fractal_get_height(temp);
     double average = 0;
     double total = w * h;
-    //printf("  Test - a = %f\n",temp->a);
-    //printf("  Test - b = %f\n",temp->b);
     for (int x = 0; x < w; x++) {
       for (int y = 0; y < h; y++) {
         int val = fractal_compute_value(temp, x, y);
@@ -219,23 +223,44 @@ void *computeFunc (void *param) {
 
     temp->average = average;
 
+
     char n[1000] = "";
     char *name = n;
-    strcpy(name, temp->name);//INTERDIT!!!! Parait que c'est ce que le prof a dit
+    //strncpy mieux
+    strcpy(name, temp->name);//Parait que on peut pas... A vérifier
     strcat(name, ".bmp");
     if (printAll) write_bitmap_sdl(temp, name);
-    //printf("average = %f\n",average);
-    //printf("bestAverage = %f\n",bestAverage);
+
+    pthread_mutex_lock(&mutex_best);
+    //Section Critique
     if ( average > bestAverage) {
-      //fractal_free(best);
+
+      printf("Dans le if (average > bestAverage)\n");
+      printf("bestAverage = %f\n",bestAverage);
+      printf("temp->average = %f\n",temp->average);
+
+      printf("best pointe vers %p\n",best);
+      printf("temp pointe vers %p\n",temp);
+
+      if(best!=NULL){printf("best->average = %f\n",best->average);}
+      else{printf("best==NULL\n");}
+
+      if (best!=NULL){
+        printf("Tentative de free %s\n",best->name);
+        fractal_free(best);
+      }
+
       best = temp;
+      printf("best pointe vers %p\n",best);
+
       bestAverage = average;
     }
     else {
-      // Provoque *** Error in `./main': double free or corruption (out): 0x00007f3cafb58aa0 ***
-      //fractal_free(temp);
-      // mise en commentaire pour debug l'erreur suivante
+      printf("Dans le else\n");
+      printf("temp->average = %f\n",temp->average);
+      printf("Tentative de free %s\n",temp->name);
+      fractal_free(temp);
     }
+    pthread_mutex_unlock(&mutex_best);
   }
-  return best;
 }
