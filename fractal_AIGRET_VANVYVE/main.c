@@ -104,21 +104,24 @@ int main(int argc, char const *argv[]) {
   err=pthread_join(computeThreads[0], (void **) &best);
   if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° 1\n");
 
+  printf("ENTREE DANS LE RETOUR\n");
+
   for (int i = 1; i < maxThreads; i++) {
     struct fractal *temp;
     err=pthread_join(computeThreads[i], (void **) &temp);
     if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° %i\n", i);
     if (best->average < temp->average) {
       printf("Récupération de best du thread %i\n",i);
-      //fractal_free(best);
+      fractal_free(best);
       best = temp;
     }
     else
     {
-      //fractal_free(temp);
+      fractal_free(temp);
     }
   }
 
+  printf("SORTIE DU RETOUR\n");
     err = write_bitmap_sdl(best, fileOut);
     if (err != 0) fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
     return err;
@@ -186,55 +189,58 @@ void *computeFunc (void *param) {
   struct fractal *best = NULL;//La fractale avec la meilleure moyenne
   double bestAverage = 0; //La valeur de la meilleure moyenne
 
-  while (isReading != 0 || buffer[*arg] != NULL) {
-    struct fractal *temp;
-    while (buffer[*arg] == NULL) {
-      printf("Conso en attente\n");
-      sleep(1);
-    } //Pas besoin d'aller plus loin si il
-    //n'y a rien a traiter pour notre thread
+  while (isReading != 0) {
+    if (buffer[*arg] != NULL) {
+      struct fractal *temp;
+      while (buffer[*arg] == NULL) {
+      //  printf("Conso en attente\n");
+        //sleep(1);
+      } //Pas besoin d'aller plus loin si il
+      //n'y a rien a traiter pour notre thread
 
-    pthread_mutex_lock(&mutex_buffer);
-    //Section Critique
-    temp = buffer[*arg];
-    buffer[*arg] = NULL;
-    pthread_mutex_unlock(&mutex_buffer);
-    sem_post(&empty);
+      pthread_mutex_lock(&mutex_buffer);
+      //Section Critique
+      temp = buffer[*arg];
+      buffer[*arg] = NULL;
+      pthread_mutex_unlock(&mutex_buffer);
+      sem_post(&empty);
 
-    int w = fractal_get_width(temp);
-    int h = fractal_get_height(temp);
-    double average = 0;
-    double total = w * h;
-    //printf("  Test - a = %f\n",temp->a);
-    //printf("  Test - b = %f\n",temp->b);
-    for (int x = 0; x < w; x++) {
-      for (int y = 0; y < h; y++) {
-        int val = fractal_compute_value(temp, x, y);
-        average += val;
-        fractal_set_value(temp, x, y, val);
+      int w = fractal_get_width(temp);
+      int h = fractal_get_height(temp);
+      double average = 0;
+      double total = w * h;
+      //printf("  Test - a = %f\n",temp->a);
+      //printf("  Test - b = %f\n",temp->b);
+      for (int x = 0; x < w; x++) {
+        for (int y = 0; y < h; y++) {
+          int val = fractal_compute_value(temp, x, y);
+          average += val;
+          fractal_set_value(temp, x, y, val);
+        }
       }
-    }
 
-    average = average / total;
+      average = average / total;
 
-    temp->average = average;
+      temp->average = average;
 
-    char n[1000] = "";
-    char *name = n;
-    strcpy(name, temp->name);//INTERDIT!!!! Parait que c'est ce que le prof a dit
-    strcat(name, ".bmp");
-    if (printAll) write_bitmap_sdl(temp, name);
-    //printf("average = %f\n",average);
-    //printf("bestAverage = %f\n",bestAverage);
-    if ( average > bestAverage) {
-      //fractal_free(best);
-      best = temp;
-      bestAverage = average;
-    }
-    else {
-      // Provoque *** Error in `./main': double free or corruption (out): 0x00007f3cafb58aa0 ***
-      //fractal_free(temp);
-      // mise en commentaire pour debug l'erreur suivante
+      char n[1000] = "";
+      char *name = n;
+      strcpy(name, temp->name);//INTERDIT!!!! Parait que c'est ce que le prof a dit
+      strcat(name, ".bmp");
+      if (printAll) write_bitmap_sdl(temp, name);
+      //printf("average = %f\n",average);
+      //printf("bestAverage = %f\n",bestAverage);
+      if ( average > bestAverage) {
+        if (best != NULL)
+              fractal_free(best);
+        best = temp;
+        bestAverage = average;
+      }
+      else {
+        // Provoque *** Error in `./main': double free or corruption (out): 0x00007f3cafb58aa0 ***
+        fractal_free(temp);
+        // mise en commentaire pour debug l'erreur suivante
+      }
     }
   }
   return best;
