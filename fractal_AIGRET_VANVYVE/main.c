@@ -78,6 +78,7 @@ for (int i = 0; i < nbFiles; i++) printf("Fichier de donnee n° %i : %s\n", i+1,
 //Initialisation des semaphores et des mutex
 pthread_mutex_init(&mutex_buffer, NULL);
 pthread_mutex_init(&mutex_closing, NULL);
+pthread_mutex_init(&mutex_best, NULL);
 sem_init(&empty, 0, maxThreads);
 //sem_init(&full, 0,0);
 buffer = (struct fractal **) malloc(maxThreads * sizeof(struct fractal *));
@@ -128,10 +129,9 @@ fractal_free(temp);
 
 printf("SORTIE DU RETOUR\n");
 */
-printf("best : %p\n",best);
-printf("TEST 1\n");
+if(best==NULL)printf("best : %p\n",best);
 err = write_bitmap_sdl(best, fileOut);
-printf("TEST 2\n");
+printf("TEST\n");
 if (err != 0) {
   fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
 }
