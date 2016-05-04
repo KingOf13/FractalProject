@@ -23,6 +23,20 @@ MAI 2016
 */
 
 /*
+Idees de test
+
+verifier que le longueur est ok
+idem largeur
+idem a
+idem b
+
+
+
+*/
+
+
+
+/*
 // Test si alloc passe bien à 0 apres myfree
 void test_myfree_desalloc(void)
 {

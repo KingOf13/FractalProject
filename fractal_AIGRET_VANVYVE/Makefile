@@ -14,12 +14,13 @@ main.o: main.c libfractal/fractal.h
 clean:
 		@rm -rf *.o
 
-cleanV:
-	@rm -rf *.log
+tests1.o: tests1.c ../libfractal/fractal.h
+	@gcc -c tests1.c -lcunit -o tests1.o
 
 mrproper: clean cleanV
 	@rm -rf main
 
+#-----------------------------------------------------------------------------------
 
 exemple1:
 	@./main -d $(MT) ../exemple_fractales.txt ../best.bmp
@@ -34,3 +35,6 @@ valgrind :
 	@G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --leak-check=full --num-callers=40 --log-file=valgrind.log ./main $(ARG)
 	@tar -zcf valgrind-logs-main.tar.gz valgrind.log*
 	@rm -rf valgrind-logs-main.tar.gz
+
+cleanV:
+	@rm -rf *.log
