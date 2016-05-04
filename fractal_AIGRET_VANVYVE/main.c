@@ -129,6 +129,13 @@ fractal_free(temp);
 
 printf("SORTIE DU RETOUR\n");
 */
+
+for (int i = 0; i < maxThreads; i++) {
+  arg[i] = i;
+  err=pthread_join(computeThreads[i], NULL);
+  if (err != 0) fprintf(stderr, "Erreur lors de la creation du thread de calcul n° %i\n", i);
+}
+
 if(best==NULL)printf("best : %p\n",best);
 err = write_bitmap_sdl(best, fileOut);
 printf("TEST\n");
