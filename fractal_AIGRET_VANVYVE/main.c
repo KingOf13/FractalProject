@@ -211,81 +211,87 @@ void *readerFunc(void *param) {
 //CONSOMMATEUR
 void *computeFunc (void *param) {
   int *arg = (int *) param; //La case du buffer qui lui est attribuee
-  //struct fractal *best= NULL; //La fractale avec la meilleure moyenne
-  //double bestAverage = 0; //La valeur de la meilleure moyenne
+  struct fractal *best_th= NULL; //La fractale avec la meilleure moyenne dans le thread
+  double bestAverage_th = 0; //La valeur de la meilleure moyenne dans le thread
 
   while (isReading != 0 ) {
     struct fractal *temp;
 
-			sem_wait(&full);
-	    pthread_mutex_lock(&mutex_buffer);
-	    //Section Critique
-      int get = 0;
-      for (int i = 0; !get; i++) {
-        if (buffer[i] == NULL) {
-          temp = buffer[i];
-          get ++;
-        }
-      }
-	    pthread_mutex_unlock(&mutex_buffer);
-	    sem_post(&empty);
-
-	    int w = fractal_get_width(temp);
-	    int h = fractal_get_height(temp);
-	    double average = 0;
-	    double total = w * h;
-	    for (int x = 0; x < w; x++) {
-	      for (int y = 0; y < h; y++) {
-	        int val = fractal_compute_value(temp, x, y);
-	        average += val;
-	      }
+		sem_wait(&full);
+		pthread_mutex_lock(&mutex_buffer);
+		//Section Critique
+		int get = 0;
+		for (int i = 0; !get; i++) {
+			if (buffer[i] == NULL) {
+				temp = buffer[i];
+				get ++;
 			}
+		}
+		pthread_mutex_unlock(&mutex_buffer);
+		sem_post(&empty);
 
-	      average = average / total;
 
-	      temp->average = average;
+    int w = fractal_get_width(temp);
+    int h = fractal_get_height(temp);
+    double average = 0;
+    double total = w * h;
+    for (int x = 0; x < w; x++) {
+      for (int y = 0; y < h; y++) {
+        int val = fractal_compute_value(temp, x, y);
+        average += val;
+      }
+    }
 
 
-	      char n[1000] = "";
-	      char *name = n;
-	      //strncpy mieux
-	      strcpy(name, temp->name);//Parait que on peut pas... A vérifier
-	      strcat(name, ".bmp");
-	      if (printAll) write_bitmap_sdl(temp, name);
+    average = average / total;
 
-	      pthread_mutex_lock(&mutex_best);
-	      //Section Critique
-	      if ( average > bestAverage) {
+    temp->average = average;
 
-	        printf("Dans le if (average > bestAverage)\n");
-	        printf("bestAverage = %f\n",bestAverage);
-	        printf("temp->average = %f\n",temp->average);
 
-	        printf("best pointe vers %p\n",best);
-	        printf("temp pointe vers %p\n",temp);
+    char n[1000] = "";
+    char *name = n;
+    strcpy(name, temp->name);
+    strcat(name, ".bmp");
+    if (printAll) write_bitmap_sdl(temp, name);
 
-	        if(best!=NULL){printf("best->average = %f\n",best->average);}
-	        else{printf("best==NULL\n");}
+    if ( average < bestAverage_th)
+    {
+      fractal_free(temp);
+    }
+    else
+    {
+      bestAverage_th = average;
+      best_th = temp;
+      pthread_mutex_lock(&mutex_best);
+      //Section Critique
+      if ( average > bestAverage) {
+        //printf("Dans le if (average > bestAverage)\n");
+        //printf("bestAverage = %f\n",bestAverage);
+        //printf("temp->average = %f\n",temp->average);
 
-	        if (best!=NULL){
-	          printf("Tentative de free (best) %s\n",best->name);
-						printf("Best pointe vers %p\n", best);
-						fractal_free(best);
-						printf("best freed\n");
-	        }
+        //printf("best pointe vers %p\n",best);
+        //printf("temp pointe vers %p\n",temp);
 
-	        best = temp;
-	        printf("best pointe vers %p\n",best);
+        //if(best!=NULL){printf("best->average = %f\n",best->average);}
+        //else{printf("best==NULL\n");}
 
-	        bestAverage = average;
-	      }
-	      else {
-	        printf("Dans le else\n");
-	        printf("temp->average = %f\n",temp->average);
-	        printf("Tentative de free (temp) %s\n",temp->name);
-	        fractal_free(temp);
+        if (best!=NULL){
+          //printf("Tentative de free %s\n",best->name);
+          fractal_free(best);
+        }
 
-	      }
-	      pthread_mutex_unlock(&mutex_best);
+        best = temp;
+        //printf("best pointe vers %p\n",best);
+
+        bestAverage = average;
+      }
+      else {
+        //printf("Dans le else\n");
+        //printf("temp->average = %f\n",temp->average);
+        //printf("Tentative de free %s\n",temp->name);
+        fractal_free(temp);
+      }
+      pthread_mutex_unlock(&mutex_best);
+    }
   }
 }
