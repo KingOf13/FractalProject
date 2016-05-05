@@ -1,17 +1,18 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "fractal.h"
 
 
 int *talloc(int w, int h) {
   int *matrix;
 
-  matrix = (int *) malloc( h*w * sizeof(int));
-  if( matrix == NULL ) exit(EXIT_FAILURE);
-
-  return matrix;
+  matrix = (int *) malloc(h*w * sizeof(int));
+  if(matrix == NULL) {exit(EXIT_FAILURE);}
+	return matrix;
 }
 
-struct fractal *fractal_new(const char *name, int width, int height, double a, double b)
+struct fractal *fractal_new(const char *n, int width, int height, double a, double b)
 {
     struct fractal *new = (struct fractal *) malloc(sizeof(struct fractal));
     if (new == NULL) exit(EXIT_FAILURE);
@@ -20,16 +21,18 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
     new->w = width;
     new->h = height;
     new->grid = talloc(width, height);
-    new->name = name;
+		char *name = (char *) malloc(strlen(n) * sizeof(char));
+		strcpy(name, n);
+		new->name = name;
     return new;
 }
 
 
 void fractal_free(struct fractal *f)
 {
-  free(f->grid);
-  free(f->name);
-  free(f);
+	free(f->grid);
+	free(f->name);
+	free(f);
 }
 
 int fractal_get_value(const struct fractal *f, int x, int y)
