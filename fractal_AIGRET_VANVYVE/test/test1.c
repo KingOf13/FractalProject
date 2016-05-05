@@ -34,9 +34,6 @@ idem largeur
 idem a
 idem b
 
-Tester le format --> a mettre dans 
-
-
 */
 
 
@@ -60,6 +57,48 @@ void test_getter(char *name, int w, int h, double a, double b)
   CU_ASSERT_EQUAL(fractal_get_a(fract_test),a);
   CU_ASSERT_EQUAL(fractal_get_b(fract_test),b);
 }
+
+void test_get_value()
+{
+  char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
+  name = "fract_test";
+  int size = 20
+  struct fractal *fract_test(name,size,size,1,1);
+
+  int *matrix;
+  matrix = (int *) malloc( size*size * sizeof(int));
+
+  for (int i = 0; i < size*size; i++) {
+    *(matrix+i)=1;
+  }
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      CU_ASSERT_EQUAL(fractal_get_value(fract_test,i,j),1);
+    }
+  }
+}
+
+void test_set_value()
+{
+  char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
+  name = "fract_test";
+  int size = 20
+  struct fractal *fract_test(name,size,size,1,1);
+
+  int *matrix;
+  matrix = (int *) malloc( size*size * sizeof(int));
+
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      fractal_set_value(fract_test,i,j,1);
+    }
+  }
+
+  for (int i = 0; i < size*size; i++) {
+    CU_ASSERT_EQUAL(*(matrix+i),1);
+  }
+}
+
 
 
 int setup(void)  { return 0; }
@@ -86,7 +125,8 @@ int main()
   }
 
    if ((NULL == CU_add_test(pSuite, "Test getter",test_getter)) ||
-       (NULL == CU_add_test(pSuite, "/* ... */ ", /* ... */ ))
+       (NULL == CU_add_test(pSuite, "Test get value",test_get_value))||
+       (NULL == CU_add_test(pSuite, "Test set value",test_set_value))
      )
    {
      CU_cleanup_registry();
