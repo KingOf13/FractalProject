@@ -204,8 +204,8 @@ void *readerFunc(void *param) {
 //CONSOMMATEUR
 void *computeFunc (void *param) {
   int *arg = (int *) param; //La case du buffer qui lui est attribuee
-  //struct fractal *best= NULL; //La fractale avec la meilleure moyenne
-  //double bestAverage = 0; //La valeur de la meilleure moyenne
+  struct fractal *best_th= NULL; //La fractale avec la meilleure moyenne dans le thread
+  double bestAverage_th = 0; //La valeur de la meilleure moyenne dans le thread
 
   while (isReading != 0 || buffer[*arg] != NULL) {
     struct fractal *temp;
@@ -213,7 +213,8 @@ void *computeFunc (void *param) {
       //printf("TEST\n");
       //printf("Conso en attente\n");
       //sleep(1);
-    } //Pas besoin d'aller plus loin si il
+    }
+    //Pas besoin d'aller plus loin si il
     //n'y a rien a traiter pour notre thread
 
     pthread_mutex_lock(&mutex_buffer);
@@ -223,6 +224,7 @@ void *computeFunc (void *param) {
     pthread_mutex_unlock(&mutex_buffer);
     sem_post(&empty);
 
+
     int w = fractal_get_width(temp);
     int h = fractal_get_height(temp);
     double average = 0;
@@ -231,51 +233,57 @@ void *computeFunc (void *param) {
       for (int y = 0; y < h; y++) {
         int val = fractal_compute_value(temp, x, y);
         average += val;
-        fractal_set_value(temp, x, y, val);
       }
-
-      average = average / total;
-
-      temp->average = average;
+    }
 
 
-      char n[1000] = "";
-      char *name = n;
-      //strncpy mieux
-      strcpy(name, temp->name);//Parait que on peut pas... A vérifier
-      strcat(name, ".bmp");
-      if (printAll) write_bitmap_sdl(temp, name);
+    average = average / total;
 
+    temp->average = average;
+
+
+    char n[1000] = "";
+    char *name = n;
+    strcpy(name, temp->name);
+    strcat(name, ".bmp");
+    if (printAll) write_bitmap_sdl(temp, name);
+
+    if ( average < bestAverage_th)
+    {
+      fractal_free(temp);
+    }
+    else
+    {
+      bestAverage_th = average;
+      best_th = temp;
       pthread_mutex_lock(&mutex_best);
       //Section Critique
       if ( average > bestAverage) {
+        //printf("Dans le if (average > bestAverage)\n");
+        //printf("bestAverage = %f\n",bestAverage);
+        //printf("temp->average = %f\n",temp->average);
 
-        printf("Dans le if (average > bestAverage)\n");
-        printf("bestAverage = %f\n",bestAverage);
-        printf("temp->average = %f\n",temp->average);
+        //printf("best pointe vers %p\n",best);
+        //printf("temp pointe vers %p\n",temp);
 
-        printf("best pointe vers %p\n",best);
-        printf("temp pointe vers %p\n",temp);
-
-        if(best!=NULL){printf("best->average = %f\n",best->average);}
-        else{printf("best==NULL\n");}
+        //if(best!=NULL){printf("best->average = %f\n",best->average);}
+        //else{printf("best==NULL\n");}
 
         if (best!=NULL){
-          printf("Tentative de free %s\n",best->name);
+          //printf("Tentative de free %s\n",best->name);
           fractal_free(best);
         }
 
         best = temp;
-        printf("best pointe vers %p\n",best);
+        //printf("best pointe vers %p\n",best);
 
         bestAverage = average;
       }
       else {
-        printf("Dans le else\n");
-        printf("temp->average = %f\n",temp->average);
-        printf("Tentative de free %s\n",temp->name);
+        //printf("Dans le else\n");
+        //printf("temp->average = %f\n",temp->average);
+        //printf("Tentative de free %s\n",temp->name);
         fractal_free(temp);
-
       }
       pthread_mutex_unlock(&mutex_best);
     }
