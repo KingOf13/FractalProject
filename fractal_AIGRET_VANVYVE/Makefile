@@ -1,6 +1,6 @@
 FLAG = -lpthread -lSDL -Wall -Werror -g
 LIB = libfractal/fractal.o libfractal/tools.o
-ARG = ../exemple_fractales.txt ../out.bmp
+ARG = exemple_fractales.txt best.bmp
 MT = --maxthreads 4
 
 all: main clean
@@ -23,13 +23,13 @@ mrproper: clean cleanV
 #-----------------------------------------------------------------------------------
 
 exemple1:
-	@./main -d $(MT) ../exemple_fractales.txt ../best.bmp
+	@./main -d --maxthreads 5 02input_fewbig.txt best.bmp
 
 exemple2:
-		@./main ../exemple_fractales.txt ../out.bmp
+		@./main exemple_fractales.txt out.bmp
 
 exemple3:
-	@./main $(MT) ../exemple_fractales_original ../out.bmp
+	@./main $(MT) exemple_fractales_original out.bmp
 
 valgrind :
 	@G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --leak-check=full --num-callers=40 --log-file=valgrind.log ./main $(ARG)
