@@ -31,6 +31,9 @@ exemple2:
 exemple3:
 	@./main $(MT) exemple_fractales_original out.bmp
 
+exemple4:
+	@./main exemple_fractales_original out.bmp
+
 valgrind :
 	@G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --leak-check=full --num-callers=40 --log-file=valgrind.log ./main $(ARG)
 	@tar -zcf valgrind-logs-main.tar.gz valgrind.log*
