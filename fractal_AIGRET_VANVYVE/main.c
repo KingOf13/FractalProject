@@ -31,6 +31,7 @@ pthread_mutex_t mutex_buffer;
 pthread_mutex_t mutex_closing;
 pthread_mutex_t mutex_best;
 sem_t empty;
+sem_t full;
 
 pthread_t *readThreads;
 pthread_t *computeThreads;
@@ -80,7 +81,7 @@ pthread_mutex_init(&mutex_buffer, NULL);
 pthread_mutex_init(&mutex_closing, NULL);
 pthread_mutex_init(&mutex_best, NULL);
 sem_init(&empty, 0, maxThreads);
-//sem_init(&full, 0,0);
+sem_init(&full, 0,0);
 buffer = (struct fractal **) malloc(maxThreads * sizeof(struct fractal *));
 isReading = nbFiles;
 
@@ -166,12 +167,16 @@ void *readerFunc(void *param) {
       char *n = strtok(current, delim);
       char *name = (char *) malloc(strlen(n) * sizeof(char));
       name = n;
+			printf("%s\n", name);
+			printf("%s\n", n);
       int w = atoi(strtok(NULL, delim));
       int h = atoi(strtok(NULL, delim));
       double a = atof(strtok(NULL, delim));
       double b = atof(strtok(NULL, delim));
       struct fractal *temp = fractal_new(name, w, h, a, b);
-			free(name);
+			printf("Free du name (PRODUCTEUR)\n");
+			//free(name);
+			printf("Free du name (PRODUCTEUR) : DONE\n");
       sem_wait(&empty);
       pthread_mutex_lock(&mutex_buffer);
       //Section Critique
@@ -182,6 +187,7 @@ void *readerFunc(void *param) {
           placed ++;
         }
       }
+			sem_post(&full);
       //La structure a été placée pour le calcul : fin de la Section Critique
       pthread_mutex_unlock(&mutex_buffer);
     }
@@ -210,18 +216,17 @@ void *computeFunc (void *param) {
 
   while (isReading != 0 ) {
     struct fractal *temp;
-			if (buffer[*arg] != NULL) {
-	    while (buffer[*arg] == NULL) {
-	      //printf("TEST\n");
-	      //printf("Conso en attente\n");
-	      //sleep(1);
-	    } //Pas besoin d'aller plus loin si il
-	    //n'y a rien a traiter pour notre thread
 
+			sem_wait(&full);
 	    pthread_mutex_lock(&mutex_buffer);
 	    //Section Critique
-	    temp = buffer[*arg];
-	    buffer[*arg] = NULL;
+      int get = 0;
+      for (int i = 0; !get; i++) {
+        if (buffer[i] == NULL) {
+          temp = buffer[i];
+          get ++;
+        }
+      }
 	    pthread_mutex_unlock(&mutex_buffer);
 	    sem_post(&empty);
 
@@ -282,7 +287,5 @@ void *computeFunc (void *param) {
 
 	      }
 	      pthread_mutex_unlock(&mutex_best);
-	    }
-
   }
 }
