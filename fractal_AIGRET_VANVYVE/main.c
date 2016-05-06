@@ -23,6 +23,7 @@ const char *STDIN = "stdin";
 const char *delim = " ";
 struct fractal *best = NULL; // On stock la meilleure fractale dans une variable globale
 double bestAverage = 0;
+int isEmpty = 0;
 
 
 void *readerFunc(void *param);
@@ -121,7 +122,6 @@ for (int i = 0; i < maxThreads; i++) {
   if (err != 0) fprintf(stderr, "Erreur lors du join du thread de calcul n° %i\n", i);
   if (best == NULL) best = temp;
   else  if (best->average < temp->average) {
-  printf("Récupération de best du thread %i\n",i);
   fractal_free((struct fractal*) best);
   best = (struct fractal *) temp;
   }
@@ -173,6 +173,7 @@ void *readerFunc(void *param) {
         if (buffer[i] == NULL) {
           buffer[i] = temp;
           placed ++;
+          isEmpty++;
         }
       }
 			sem_post(&full);
@@ -205,7 +206,7 @@ void *computeFunc (void *param) {
 
   int *arg = (int *) param; //La case du buffer qui lui est attribuee
 
-  while (isReading != 0 ) {
+  while (isReading != 0 || isEmpty != 0) {
     temp = NULL;
 		sem_wait(&full);
 		pthread_mutex_lock(&mutex_buffer);
@@ -215,6 +216,7 @@ void *computeFunc (void *param) {
 			if (buffer[i] != NULL) {
 				temp = buffer[i];
 				get ++;
+        isEmpty--;
         buffer[i] = NULL;
 			}
 		}
