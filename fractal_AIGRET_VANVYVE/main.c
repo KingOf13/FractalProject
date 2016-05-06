@@ -9,6 +9,9 @@
 #define mt "--maxthreads"
 #define MAXLEN 1000
 
+long timeval_diff (struct timeval *t2, struct timeval *t1);
+#include <sys/time.h>
+
 /*
 Notes :
 - Si le fichier ne contient que une ligne de commentaire --> La fonction attend et ne fait rien
@@ -39,9 +42,26 @@ pthread_t *computeThreads;
 struct fractal **buffer;
 int isReading;
 
+/* Return t2-t1 in microseconds */
+long timeval_diff (struct timeval *t2, struct timeval *t1)
+{
+  long diff = (t2->tv_usec + 1000000 * t2->tv_sec) - (t1->tv_usec + 1000000 * t1->tv_sec);
+  return (diff);
+}
+
+
 int main(int argc, char const *argv[]) {
   const char *files[argc];
   const char *fileOut = argv[argc-1];
+
+
+  struct timeval tvStart, tvEnd;
+  int err;
+  err=gettimeofday(&tvStart, NULL);
+  if(err!=0)
+  {
+    exit(EXIT_FAILURE);
+  }
 
   //On checke les arguments d'entree
   for (int i = 1; i < argc-1; i++) {
@@ -130,12 +150,21 @@ for (int i = 0; i < maxThreads; i++) {
 
   printf("SORTIE DU RETOUR\n");
 
+  err = gettimeofday(&tvEnd, NULL);
+  if(err!=0){
+    exit(EXIT_FAILURE);
+  }
+
+  printf("Duration : %ld seconds\n", timeval_diff(&tvEnd, &tvStart)*1000000);
+
   err = write_bitmap_sdl(best, fileOut);
 
   if (err != 0) {
     fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
   }
+
 return err;
+
 }
 
 
