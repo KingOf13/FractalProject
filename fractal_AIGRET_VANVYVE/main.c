@@ -206,56 +206,58 @@ void *computeFunc (void *param) {
 
   int *arg = (int *) param; //La case du buffer qui lui est attribuee
 
-  while (isReading != 0 || isEmpty != 0) {
-    temp = NULL;
-		sem_wait(&full);
-		pthread_mutex_lock(&mutex_buffer);
-		//Section Critique
-		int get = 0;
-		for (int i = 0; !get; i++) {
-			if (buffer[i] != NULL) {
-				temp = buffer[i];
-				get ++;
-        isEmpty--;
-        buffer[i] = NULL;
-			}
-		}
-		pthread_mutex_unlock(&mutex_buffer);
-		sem_post(&empty);
+    while (isReading != 0 || isEmpty != 0) {
+      if (isEmpty != 0) {
+      temp = NULL;
+  		sem_wait(&full);
+  		pthread_mutex_lock(&mutex_buffer);
+  		//Section Critique
+  		int get = 0;
+  		for (int i = 0; !get; i++) {
+  			if (buffer[i] != NULL) {
+  				temp = buffer[i];
+  				get ++;
+          isEmpty--;
+          buffer[i] = NULL;
+  			}
+  		}
+  		pthread_mutex_unlock(&mutex_buffer);
+  		sem_post(&empty);
 
 
-    int w = fractal_get_width(temp);
-    int h = fractal_get_height(temp);
-    double average = 0;
-    double total = w * h;
-    for (int x = 0; x < w; x++) {
-      for (int y = 0; y < h; y++) {
-        int val = fractal_compute_value(temp, x, y);
-        average += val;
+      int w = fractal_get_width(temp);
+      int h = fractal_get_height(temp);
+      double average = 0;
+      double total = w * h;
+      for (int x = 0; x < w; x++) {
+        for (int y = 0; y < h; y++) {
+          int val = fractal_compute_value(temp, x, y);
+          average += val;
+        }
       }
-    }
 
 
-    average = average / total;
+      average = average / total;
 
-    temp->average = average;
+      temp->average = average;
 
 
-    char n[1000] = "";
-    char *name = n;
-    strcpy(name, temp->name);
-    strcat(name, ".bmp");
-    if (printAll) write_bitmap_sdl(temp, name);
+      char n[1000] = "";
+      char *name = n;
+      strcpy(name, temp->name);
+      strcat(name, ".bmp");
+      if (printAll) write_bitmap_sdl(temp, name);
 
-    if ( average < bestAverage)
-    {
-      fractal_free(temp);
-    }
-    else
-    {
-      bestAverage = average;
-      if (best != NULL) fractal_free(best);
-      best = temp;
+      if ( average < bestAverage)
+      {
+        fractal_free(temp);
+      }
+      else
+      {
+        bestAverage = average;
+        if (best != NULL) fractal_free(best);
+        best = temp;
+      }
     }
   }
   return (void*) best;
