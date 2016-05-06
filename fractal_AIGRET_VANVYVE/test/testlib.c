@@ -66,6 +66,8 @@ void test_get_value()
       k++;
     }
   }
+  free(matrix)
+
 }
 
 void test_set_value()
@@ -89,6 +91,7 @@ void test_set_value()
   for (int i = 0; i < size*size; i++) {
     CU_ASSERT_EQUAL(*(matrix+i),i);
   }
+  free(matrix);
 }
 
 

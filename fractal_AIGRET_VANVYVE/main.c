@@ -258,3 +258,10 @@ void *computeFunc (void *param) {
   }
   return (void*) best;
 }
+
+
+/*
+Qu'est ce qui est pire que de faire tourner un bébé au dessus de sa tete?
+
+L'arreter avec une pelle
+*/
