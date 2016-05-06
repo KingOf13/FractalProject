@@ -46,14 +46,15 @@ void test_get_value()
   int *matrix;
   matrix = (int *) malloc( size*size * sizeof(int));
 
-  for (int i = 0; i < size*size; i++) {
+  for (int i = 0; i < size*size; i++)
+  {
     *(matrix+i)=i;
   }
-  int k = 0
+  int k = 0;
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
       CU_ASSERT_EQUAL(fractal_get_value(fract_test,i,j),k);
-      k++
+      k++;
     }
   }
 }
@@ -68,10 +69,11 @@ void test_set_value()
   int *matrix;
   matrix = (int *) malloc( size*size * sizeof(int));
 
-  int k = 0
+  int k = 0;
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
       fractal_set_value(fract_test,i,j,k);
+      k++;
     }
   }
 
