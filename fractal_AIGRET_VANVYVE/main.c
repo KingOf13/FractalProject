@@ -9,9 +9,6 @@
 #define mt "--maxthreads"
 #define MAXLEN 1000
 
-long timeval_diff (struct timeval *t2, struct timeval *t1);
-#include <sys/time.h>
-
 /*
 Notes :
 - Si le fichier ne contient que une ligne de commentaire --> La fonction attend et ne fait rien

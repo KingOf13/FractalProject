@@ -27,9 +27,15 @@ Idees de tests
 [...]
 */
 
-void test_getter(char *name, int w, int h, double a, double b)
+void test_getter()
 {
-  struct fractal *fract_test = fractal_new(name,w,h,a,b);
+  int w = 30;
+  int h = 30;
+  double a = 0.43432;
+  double b = 0.62734892;
+
+  struct fractal *fract_test = fractal_new("fract_test",w,h,a,b);
+
   CU_ASSERT_EQUAL(fractal_get_width(fract_test),w);
   CU_ASSERT_EQUAL(fractal_get_height(fract_test),h);
   CU_ASSERT_EQUAL(fractal_get_a(fract_test),a);
@@ -38,10 +44,8 @@ void test_getter(char *name, int w, int h, double a, double b)
 
 void test_get_value()
 {
-  char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
-  name = "fract_test";
   int size = 10;
-  struct fractal *fract_test =  fractal_new(name,size,size,1,1);
+  struct fractal *fract_test =  fractal_new("fract_test",size,size,1,1);
 
   int *matrix;
   matrix = (int *) malloc( size*size * sizeof(int));
@@ -50,6 +54,9 @@ void test_get_value()
   {
     *(matrix+i)=i;
   }
+
+  fract_test->grid = matrix;
+
   int k = 0;
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
@@ -61,10 +68,8 @@ void test_get_value()
 
 void test_set_value()
 {
-  char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
-  name = "fract_test";
   int size = 10;
-  struct fractal *fract_test =  fractal_new(name,size,size,1,1);
+  struct fractal *fract_test =  fractal_new("fract_test",size,size,1,1);
 
   int *matrix;
   matrix = (int *) malloc( size*size * sizeof(int));
@@ -76,6 +81,8 @@ void test_set_value()
       k++;
     }
   }
+
+  matrix = fract_test->grid;
 
   for (int i = 0; i < size*size; i++) {
     CU_ASSERT_EQUAL(*(matrix+i),i);
@@ -89,14 +96,6 @@ int teardown(void) { return 0; }
 
 int main()
 {
-  char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
-  name = "fract_test";
-  int w = 30;
-  int h = 30;
-  double a = 0.4;
-  double b = 0.6;
-  struct fractal *fract_test = fractal_new(name,w,h,a,b);
-
   CU_pSuite pSuite = NULL;
   if (CUE_SUCCESS != CU_initialize_registry())
   return CU_get_error();
@@ -116,6 +115,8 @@ int main()
      return CU_get_error();
    }
 
+
+   //CU_basic_set_mode(CU_BRM_NORMAL);
    CU_basic_set_mode(CU_BRM_VERBOSE);
    CU_basic_run_tests();
    printf("\n");

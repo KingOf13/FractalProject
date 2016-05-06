@@ -1,21 +1,25 @@
-FLAG = -lpthread -lSDL -Wall -Werror -g
+FLAG = -lpthread -lSDL -Wall -Werror
 LIB = libfractal/fractal.o libfractal/tools.o
-ARG = exemple_fractales.txt best.bmp
-MT = --maxthreads 4
+MT = --maxthreads 100
 
 all: main clean
 
 main: main.o
-		@gcc -o main main.o $(LIB) $(FLAG)
+	@gcc -o main main.o $(LIB) $(FLAG)
+
+testlib: libfractal/fractal.o test/testlib.o
+	@gcc -o test/fractal libfractal/fractal.o test/testlib.o -lcunit
+	@./test/fractal
 
 main.o: main.c libfractal/fractal.h
-		@gcc -c main.c -o main.o
+	@gcc -c main.c -o main.o
 
 clean:
-		@rm -rf *.o
+	@rm -rf *.o
+	@rm -rf test/*.o
 
-test1.o: test/test1.c libfractal/fractal.h
-	@gcc -c test/test1.c -lcunit -o test1.o -Werror -Wall
+testlib.o: test/testlib.c libfractal/fractal.h
+	@gcc -c testlib.c -lcunit -o test/testlib.o
 
 mrproper: clean cleanV
 	@rm -rf main
@@ -23,7 +27,7 @@ mrproper: clean cleanV
 #-----------------------------------------------------------------------------------
 
 exemple1:
-	@./main --maxthreads 5 02input_fewbig.txt best.bmp
+	@./main $(MT) 02input_fewbig.txt best.bmp
 
 exemple2:
 		@./main exemple_fractales.txt out.bmp
@@ -35,7 +39,7 @@ exemple4:
 	@./main exemple_fractales_original out.bmp
 
 exemple5:
-	@./main --maxthreads 20 03input_manysmall.txt best.bmp
+	@./main $(MT) 03input_manysmall.txt best.bmp
 
 valgrind :
 	@G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --leak-check=full --num-callers=40 --log-file=valgrind.log ./main $(ARG)
