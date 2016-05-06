@@ -25,7 +25,6 @@ struct fractal *best = NULL; // On stock la meilleure fractale dans une variable
 double bestAverage = 0;
 int isEmpty = 0;
 
-
 void *readerFunc(void *param);
 void *computeFunc (void *param);
 pthread_mutex_t mutex_buffer;
@@ -114,7 +113,6 @@ for (int i = 0; i < maxThreads; i++) {
 struct fractal *best = NULL;
 
 
-printf("ENTREE DANS LE RETOUR\n");
 
 for (int i = 0; i < maxThreads; i++) {
   struct fractal *temp;
@@ -141,6 +139,7 @@ return err;
 
 //PRODUCTEUR
 void *readerFunc(void *param) {
+  char* save;
 
   FILE *fichier = NULL;
   const char* nomfichier = (char *) param;
@@ -156,14 +155,13 @@ void *readerFunc(void *param) {
   while (fgets(current, MAXLEN, fichier) != NULL){
     if (current[0] != '\n' && current[0] != '#'){
       //Production de l item
-      char *n = strtok(current, delim);
+      char *n = strtok_r(current, delim, &save);
       char *name = (char *) malloc(strlen(n) * sizeof(char));
       name = n;
-
-      int w = atoi(strtok(NULL, delim));
-      int h = atoi(strtok(NULL, delim));
-      double a = atof(strtok(NULL, delim));
-      double b = atof(strtok(NULL, delim));
+      int w = atoi(strtok_r(NULL, delim, &save));
+      int h = atoi(strtok_r(NULL, delim, &save));
+      double a = atof(strtok_r(NULL, delim, &save));
+      double b = atof(strtok_r(NULL, delim, &save));
       struct fractal *temp = fractal_new(name, w, h, a, b);
       sem_wait(&empty);
       pthread_mutex_lock(&mutex_buffer);
