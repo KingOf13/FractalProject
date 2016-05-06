@@ -14,8 +14,8 @@ main.o: main.c libfractal/fractal.h
 clean:
 		@rm -rf *.o
 
-tests1.o: tests1.c ../libfractal/fractal.h
-	@gcc -c tests1.c -lcunit -o tests1.o
+test1.o: test/test1.c libfractal/fractal.h
+	@gcc -c test/test1.c -lcunit -o test1.o -Werror -Wall
 
 mrproper: clean cleanV
 	@rm -rf main

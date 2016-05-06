@@ -62,8 +62,8 @@ void test_get_value()
 {
   char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
   name = "fract_test";
-  int size = 20
-  struct fractal *fract_test(name,size,size,1,1);
+  int size = 10;
+  struct fractal *fract_test =  fractal_new(name,size,size,1,1);
 
   int *matrix;
   matrix = (int *) malloc( size*size * sizeof(int));
@@ -82,8 +82,8 @@ void test_set_value()
 {
   char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
   name = "fract_test";
-  int size = 20
-  struct fractal *fract_test(name,size,size,1,1);
+  int size = 10;
+  struct fractal *fract_test =  fractal_new(name,size,size,1,1);
 
   int *matrix;
   matrix = (int *) malloc( size*size * sizeof(int));
