@@ -34,6 +34,9 @@ exemple3:
 exemple4:
 	@./main exemple_fractales_original out.bmp
 
+exemple5:
+	@./main --maxthreads 20 03input_manysmall.txt best.bmp
+
 valgrind :
 	@G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --leak-check=full --num-callers=40 --log-file=valgrind.log ./main $(ARG)
 	@tar -zcf valgrind-logs-main.tar.gz valgrind.log*

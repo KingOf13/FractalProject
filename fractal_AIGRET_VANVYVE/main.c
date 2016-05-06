@@ -155,7 +155,7 @@ for (int i = 0; i < maxThreads; i++) {
     exit(EXIT_FAILURE);
   }
 
-  printf("Duration : %ld seconds\n", timeval_diff(&tvEnd, &tvStart)*1000000);
+  printf("Duration : %ld seconds\n", timeval_diff(&tvEnd, &tvStart)/1000000);
 
   err = write_bitmap_sdl(best, fileOut);
 
