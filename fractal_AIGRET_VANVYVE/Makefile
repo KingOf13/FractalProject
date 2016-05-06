@@ -23,7 +23,7 @@ mrproper: clean cleanV
 #-----------------------------------------------------------------------------------
 
 exemple1:
-	@./main -d --maxthreads 5 02input_fewbig.txt best.bmp
+	@./main --maxthreads 5 02input_fewbig.txt best.bmp
 
 exemple2:
 		@./main exemple_fractales.txt out.bmp
