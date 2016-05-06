@@ -1,0 +1,52 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{lmodern}
+\usepackage{verbatim}
+\usepackage{hyperref}
+
+
+\author{Aigret Julien \texttt{(8343-13-00)}\and Vanvyve Nicolas \texttt{(6590-13-00)}}
+\date{6 mai 2016}
+\title{LSINF1252\\Rapport de projet 2 : Fractales}
+
+\begin{document}
+
+\maketitle
+
+%Pour le rapport du projet, on vous demande de présenter votre architecture, d'expliquer et justifier vos choix d'implémentations, les difficultés éventuellement rencontrées, ainsi que montrer brièvement les performances de votre implémentation. Le rapport ne devrait pas dépasser 4 pages.
+
+\section{Architecture}
+
+Nous avons décider d'implémenter un producteur consommateur assez classique. Nous avons un producteur par fichier d'entrée, ils lisent ligne par ligne les fichiers et transforment  le texte en une structure fractal. La fractale est ensuite placé dans un tableau de taille fixe.
+
+La taille du tableau est égale au nombre de threads de calculs autorisé par l'utilisateur. Nous bloquons les producteur à l'aide d'un sémaphore, puisque les threads de lecture sont beaucoup plus rapide que les threads calculs.
+
+Nous utilisons un deuxième sémaphore pour gérer les consommateurs. Des que un case du tableau est remplie, un consommateur libre vide la case du tableau et calcule la valeur de chaque pixel de la fractale ainsi que sa moyenne.
+Le thread de calcul n'est lancé que une seule fois en tourne en boucle tant que il y a encore des fractales a calculer. Cela nous permet de garder, dans le thread, la meilleure fractale que le consommateur a traité, ainsi que la moyenne de celle ci.
+A chaque itération la moyenne est comparée a celle de référence et la moins bonne des deux fractales est libérée.
+
+Lorsqu'il n'y a plus rien a traiter dans le tableau, les consommateurs retourne la meilleure fractale qu'ils ont traité, nous parcourons ensuite les différentes valeurs moyennes afin de sélectionner la meilleure de toute, les autres sont libérées. La meilleure est ensuite "imprimée" et libérée.
+ 
+\section{Choix d'implémentation}
+
+Afin de transformer une ligne de texte en une fractale, nous utilisons la fonction strtok_r qui prend comme argument
+
+%strtok_r --> safe multithread
+
+
+\section{Difficultés rencontrées}
+
+\section{Performances}
+% test fourni 
+% n3 en 1min42
+% n2 en 42sec
+
+\end{document}
