@@ -112,11 +112,6 @@ for (int i = 0; i < maxThreads; i++) {
 
 struct fractal *best = NULL;
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 89e75bc433dc78c1cc033871bbc49270045e0d83
 for (int i = 0; i < maxThreads; i++) {
   struct fractal *temp;
   err=pthread_join(computeThreads[i], (void **) &temp);
