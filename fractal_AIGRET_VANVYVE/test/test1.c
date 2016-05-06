@@ -23,31 +23,9 @@ MAI 2016
 */
 
 /*
-Idees de test
-
-Creer une nouvelle fractale
-vérifier la taille allouée??
-donner une grille deja faite et tester les valeur
-idem inversément
-verifier que le longueur est ok
-idem largeur
-idem a
-idem b
-
+Idees de tests
+[...]
 */
-
-
-/*
-// Test si alloc passe bien à 0 apres myfree
-void test_myfree_desalloc(void)
-{
-  int* pointeurtest = (int *) mymalloc(sizeof(int));
-  block_header *bh_test = (block_header *)(pointeurtest-1);
-  myfree(pointeurtest);
-  CU_ASSERT_EQUAL((bh_test->alloc),0);
-}
-*/
-
 
 void test_getter(char *name, int w, int h, double a, double b)
 {
@@ -62,18 +40,20 @@ void test_get_value()
 {
   char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
   name = "fract_test";
-  int size = 20
-  struct fractal *fract_test(name,size,size,1,1);
+  int size = 10;
+  struct fractal *fract_test =  fractal_new(name,size,size,1,1);
 
   int *matrix;
   matrix = (int *) malloc( size*size * sizeof(int));
 
   for (int i = 0; i < size*size; i++) {
-    *(matrix+i)=1;
+    *(matrix+i)=i;
   }
+  int k = 0
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
-      CU_ASSERT_EQUAL(fractal_get_value(fract_test,i,j),1);
+      CU_ASSERT_EQUAL(fractal_get_value(fract_test,i,j),k);
+      k++
     }
   }
 }
@@ -82,20 +62,21 @@ void test_set_value()
 {
   char *name = (char *) malloc(strlen("fract_test") * sizeof(char));
   name = "fract_test";
-  int size = 20
-  struct fractal *fract_test(name,size,size,1,1);
+  int size = 10;
+  struct fractal *fract_test =  fractal_new(name,size,size,1,1);
 
   int *matrix;
   matrix = (int *) malloc( size*size * sizeof(int));
 
+  int k = 0
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
-      fractal_set_value(fract_test,i,j,1);
+      fractal_set_value(fract_test,i,j,k);
     }
   }
 
   for (int i = 0; i < size*size; i++) {
-    CU_ASSERT_EQUAL(*(matrix+i),1);
+    CU_ASSERT_EQUAL(*(matrix+i),i);
   }
 }
 

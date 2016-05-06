@@ -9,6 +9,9 @@
 #define mt "--maxthreads"
 #define MAXLEN 1000
 
+long timeval_diff (struct timeval *t2, struct timeval *t1);
+#include <sys/time.h>
+
 /*
 Notes :
 - Si le fichier ne contient que une ligne de commentaire --> La fonction attend et ne fait rien
@@ -112,8 +115,11 @@ for (int i = 0; i < maxThreads; i++) {
 
 struct fractal *best = NULL;
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 89e75bc433dc78c1cc033871bbc49270045e0d83
 for (int i = 0; i < maxThreads; i++) {
   struct fractal *temp;
   err=pthread_join(computeThreads[i], (void **) &temp);
@@ -126,14 +132,14 @@ for (int i = 0; i < maxThreads; i++) {
   else fractal_free(temp);
   }
 
-  printf("SORTIE DU RETOUR\n");
-
   err = write_bitmap_sdl(best, fileOut);
 
   if (err != 0) {
     fprintf(stderr, "Erreur lors de l'ecriture de la meilleure fractale\n");
   }
+
 return err;
+
 }
 
 

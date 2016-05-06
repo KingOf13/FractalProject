@@ -14,8 +14,8 @@ main.o: main.c libfractal/fractal.h
 clean:
 		@rm -rf *.o
 
-tests1.o: tests1.c ../libfractal/fractal.h
-	@gcc -c tests1.c -lcunit -o tests1.o
+test1.o: test/test1.c libfractal/fractal.h
+	@gcc -c test/test1.c -lcunit -o test1.o -Werror -Wall
 
 mrproper: clean cleanV
 	@rm -rf main
@@ -23,7 +23,7 @@ mrproper: clean cleanV
 #-----------------------------------------------------------------------------------
 
 exemple1:
-	@./main -d --maxthreads 5 02input_fewbig.txt best.bmp
+	@./main --maxthreads 5 02input_fewbig.txt best.bmp
 
 exemple2:
 		@./main exemple_fractales.txt out.bmp
@@ -33,6 +33,9 @@ exemple3:
 
 exemple4:
 	@./main exemple_fractales_original out.bmp
+
+exemple5:
+	@./main --maxthreads 20 03input_manysmall.txt best.bmp
 
 valgrind :
 	@G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --leak-check=full --num-callers=40 --log-file=valgrind.log ./main $(ARG)
