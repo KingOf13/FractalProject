@@ -50,24 +50,19 @@ Notre code a assez vite été fonctionnel pour une seule fractale mais nous avio
 
 \section{Performances}
 
-%PERF
-%fichier 1 
-% 1th : 29 sec
-% 3th : 12 sec
-% 5th : 12 sec
 
-%fichier 2 
-% 10 th   : 21 sec 
-% 100 th  : 27 sec
-% 300 th  : 22 sec
+Voici les résultat de nos tests de rapidité fait avec les fichier d'input fournis\footnote{Fait sur un MacBook Pro mid 2012 8GB de RAM 2.5GHz dual-core Intel Core i5 processor (Turbo Boost up to 3.1GHz) with 3MB L3 cache} : 
 
-%fichier 3
-% 10 th  : 18 sec
-% 100 th : 19 sec
-% 1000 th: 11 sec
-
-% test fourni 
-% n3 en 1min42
-% n2 en 42sec
+\begin{tabular}{|c|c|c|}
+ \hline 
+ Fichier 1 (5 800*800) & Fichier 2 (1000 800*800) & Fichier 3 (1 000 000 8*8) \\ 
+ \hline 
+ 1 thread : 29 sec & 3 threads : 12 sec & 5 threads : 12 sec \\ 
+ \hline 
+ 10 threads : 21 sec & 100 threads : 27 sec & 300 threads : 22 sec\\ 
+ \hline 
+ 10 threads :18 sec  & 100 threads : 19 sec & 1000 threads : 11 sec\\ 
+ \hline
+ \end{tabular}  
 
 \end{document}
