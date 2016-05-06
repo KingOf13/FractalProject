@@ -9,11 +9,6 @@
 #define mt "--maxthreads"
 #define MAXLEN 1000
 
-/*
-Notes :
-- Si le fichier ne contient que une ligne de commentaire --> La fonction attend et ne fait rien
-- Idem si le fichier est vide (Astuce Tuer le processus - Moniteur systeme --> main)
-*/
 
 int nbFiles =0;
 int printAll = 0;
@@ -21,15 +16,12 @@ int maxThreads = 1;
 int stdinUsed = 0;
 const char *STDIN = "stdin";
 const char *delim = " ";
-struct fractal *best = NULL; // On stock la meilleure fractale dans une variable globale
-double bestAverage = 0;
 int isEmpty = 0;
 
 void *readerFunc(void *param);
 void *computeFunc (void *param);
 pthread_mutex_t mutex_buffer;
 pthread_mutex_t mutex_closing;
-pthread_mutex_t mutex_best;
 sem_t empty;
 sem_t full;
 
@@ -81,7 +73,6 @@ for (int i = 0; i < nbFiles; i++) printf("Fichier de donnee n° %i : %s\n", i+1,
 //Initialisation des semaphores et des mutex
 pthread_mutex_init(&mutex_buffer, NULL);
 pthread_mutex_init(&mutex_closing, NULL);
-pthread_mutex_init(&mutex_best, NULL);
 sem_init(&empty, 0, maxThreads);
 sem_init(&full, 0,0);
 
@@ -242,6 +233,7 @@ void *computeFunc (void *param) {
       char *name = n;
       strcpy(name, temp->name);
       strcat(name, ".bmp");
+      printf("%s\n",name);
       if (printAll) write_bitmap_sdl(temp, name);
 
       if ( average < bestAverage)
@@ -257,6 +249,7 @@ void *computeFunc (void *param) {
     }
   }
   return (void*) best;
+  //printf("Sortie du CONSOMMATEUR\n");
 }
 
 

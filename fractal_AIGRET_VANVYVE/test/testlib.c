@@ -66,7 +66,7 @@ void test_get_value()
       k++;
     }
   }
-  free(matrix)
+  free(matrix);
 
 }
 

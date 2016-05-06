@@ -37,12 +37,16 @@ Lorsqu'il n'y a plus rien a traiter dans le tableau, les consommateurs retourne 
  
 \section{Choix d'implémentation}
 
-Afin de transformer une ligne de texte en une fractale, nous utilisons la fonction strtok_r qui prend comme argument
+Afin de transformer une ligne de texte en une fractale, nous utilisons la fonction strtok\_r qui extrait la première partie d'une string avant un délimiteur. 
+L'avantage de strtok\_r par rapport à strtok c'est qu'il est safe en multithread, strtok utilise un même buffer pour ses différents appel, et peut provoquer une erreur si deux appels se font simultanément.
 
-%strtok_r --> safe multithread
-
+Au départ nous avions le tableau de la fractale à l'aide de double pointeur.
+Nous créions un tableau de pointeur de la taille de la hauteur de l'image et chacun pointait vers un tableau de la taille de la largeur.
+Cette solution était inutilement compliquée, un tableau étant de toute façon stocké linéairement dans la mémoire nous avons choisi de stocker le tableau 2D en une dimension de taille largeur * hauteur.
 
 \section{Difficultés rencontrées}
+
+Notre code a assez vite été fonctionnel pour une seule fractale mais nous avions des erreurs des que nous testions plus de fractales. Ce n'est que le jour de la remise du travail que nous nous sommes rendu compte que le consommateur allait chercher la fractale dans le tableau mais ne remettait pas cette dernière à NULL. Cela provoquait des erreurs "double free or corruption" 
 
 \section{Performances}
 % test fourni 
