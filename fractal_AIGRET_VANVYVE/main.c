@@ -43,26 +43,9 @@ pthread_t *computeThreads;
 struct fractal **buffer;
 int isReading;
 
-/* Return t2-t1 in microseconds */
-long timeval_diff (struct timeval *t2, struct timeval *t1)
-{
-  long diff = (t2->tv_usec + 1000000 * t2->tv_sec) - (t1->tv_usec + 1000000 * t1->tv_sec);
-  return (diff);
-}
-
-
 int main(int argc, char const *argv[]) {
   const char *files[argc];
   const char *fileOut = argv[argc-1];
-
-
-  struct timeval tvStart, tvEnd;
-  int error;
-  error=gettimeofday(&tvStart, NULL);
-  if(error!=0)
-  {
-    exit(EXIT_FAILURE);
-  }
 
   //On checke les arguments d'entree
   for (int i = 1; i < argc-1; i++) {
@@ -133,9 +116,6 @@ for (int i = 0; i < maxThreads; i++) {
 
 struct fractal *best = NULL;
 
-
-printf("ENTREE DANS LE RETOUR\n");
-
 for (int i = 0; i < maxThreads; i++) {
   struct fractal *temp;
   err=pthread_join(computeThreads[i], (void **) &temp);
@@ -147,15 +127,6 @@ for (int i = 0; i < maxThreads; i++) {
   }
   else fractal_free(temp);
   }
-
-  printf("SORTIE DU RETOUR\n");
-
-  error = gettimeofday(&tvEnd, NULL);
-  if(error!=0){
-    exit(EXIT_FAILURE);
-  }
-
-  printf("Duration : %ld seconds\n", timeval_diff(&tvEnd, &tvStart)/1000000);
 
   err = write_bitmap_sdl(best, fileOut);
 
