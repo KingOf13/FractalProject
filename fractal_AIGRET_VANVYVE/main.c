@@ -56,9 +56,9 @@ int main(int argc, char const *argv[]) {
 
 
   struct timeval tvStart, tvEnd;
-  int err;
-  err=gettimeofday(&tvStart, NULL);
-  if(err!=0)
+  int error;
+  error=gettimeofday(&tvStart, NULL);
+  if(error!=0)
   {
     exit(EXIT_FAILURE);
   }
@@ -150,8 +150,8 @@ for (int i = 0; i < maxThreads; i++) {
 
   printf("SORTIE DU RETOUR\n");
 
-  err = gettimeofday(&tvEnd, NULL);
-  if(err!=0){
+  error = gettimeofday(&tvEnd, NULL);
+  if(error!=0){
     exit(EXIT_FAILURE);
   }
 
