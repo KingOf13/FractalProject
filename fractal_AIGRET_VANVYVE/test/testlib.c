@@ -33,13 +33,15 @@ void test_getter()
   int h = 30;
   double a = 0.43432;
   double b = 0.62734892;
+  char* name = "fract_test";
 
-  struct fractal *fract_test = fractal_new("fract_test",w,h,a,b);
+  struct fractal *fract_test = fractal_new(name,w,h,a,b);
 
   CU_ASSERT_EQUAL(fractal_get_width(fract_test),w);
   CU_ASSERT_EQUAL(fractal_get_height(fract_test),h);
   CU_ASSERT_EQUAL(fractal_get_a(fract_test),a);
   CU_ASSERT_EQUAL(fractal_get_b(fract_test),b);
+  CU_ASSERT_STRING_EQUAL(fractal_get_name(fract_test),name);
 }
 
 void test_get_value()
