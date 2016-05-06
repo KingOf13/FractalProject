@@ -1,134 +1,197 @@
-==25150== Memcheck, a memory error detector
-==25150== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
-==25150== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
-==25150== Command: ./main exemple_fractales.txt best.bmp
-==25150== Parent PID: 25149
-==25150== 
---25150-- 
---25150-- Valgrind options:
---25150--    -v
---25150--    --tool=memcheck
---25150--    --leak-check=full
---25150--    --num-callers=40
---25150--    --log-file=valgrind.log
---25150-- Contents of /proc/version:
---25150--   Linux version 4.4.6-300.fc23.x86_64 (mockbuild@bkernel02.phx2.fedoraproject.org) (gcc version 5.3.1 20151207 (Red Hat 5.3.1-2) (GCC) ) #1 SMP Wed Mar 16 22:10:37 UTC 2016
---25150-- 
---25150-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-rdtscp-sse3-avx
---25150-- Page sizes: currently 4096, max supported 4096
---25150-- Valgrind library directory: /usr/lib64/valgrind
---25150-- Reading syms from /home/jaigret/Documents/Project/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main
---25150-- Reading syms from /usr/lib64/ld-2.22.so
---25150-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
---25150--    object doesn't have a symbol table
---25150--    object doesn't have a dynamic symbol table
---25150-- Scheduler: using generic scheduler lock implementation.
---25150-- Reading suppressions file: /usr/lib64/valgrind/default.supp
-==25150== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-25150-by-jaigret-on-localhost.localdomain
-==25150== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-25150-by-jaigret-on-localhost.localdomain
-==25150== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-25150-by-jaigret-on-localhost.localdomain
-==25150== 
-==25150== TO CONTROL THIS PROCESS USING vgdb (which you probably
-==25150== don't want to do, unless you know exactly what you're doing,
-==25150== or are doing some strange experiment):
-==25150==   /usr/lib64/valgrind/../../bin/vgdb --pid=25150 ...command...
-==25150== 
-==25150== TO DEBUG THIS PROCESS USING GDB: start GDB like this
-==25150==   /path/to/gdb ./main
-==25150== and then give GDB the following command
-==25150==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=25150
-==25150== --pid is optional if only one valgrind process is running
-==25150== 
---25150-- REDIR: 0x4019b90 (ld-linux-x86-64.so.2:strlen) redirected to 0x3809e321 (???)
---25150-- REDIR: 0x40198f0 (ld-linux-x86-64.so.2:index) redirected to 0x3809e33b (???)
---25150-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
---25150-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
-==25150== WARNING: new redirection conflicts with existing -- ignoring it
---25150--     old: 0x04019b90 (strlen              ) R-> (0000.0) 0x3809e321 ???
---25150--     new: 0x04019b90 (strlen              ) R-> (2007.0) 0x04c2bad0 strlen
---25150-- REDIR: 0x4019b10 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c2cb80 (strcmp)
---25150-- REDIR: 0x401a850 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c2fda0 (mempcpy)
---25150-- Reading syms from /usr/lib64/libpthread-2.22.so
---25150-- Reading syms from /usr/lib64/libSDL-1.2.so.0.11.4
---25150--    object doesn't have a symbol table
---25150-- Reading syms from /usr/lib64/libc-2.22.so
---25150-- Reading syms from /usr/lib64/libm-2.22.so
---25150-- Reading syms from /usr/lib64/libdl-2.22.so
---25150-- REDIR: 0x537dde0 (libc.so.6:strcasecmp) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x5379670 (libc.so.6:strcspn) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x53800d0 (libc.so.6:strncasecmp) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x537bb00 (libc.so.6:strpbrk) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x537be90 (libc.so.6:strspn) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x537d56b (libc.so.6:memcpy@GLIBC_2.2.5) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x5377e70 (libc.so.6:index) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x537d5c0 (libc.so.6:memset) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x537cfd0 (libc.so.6:bcmp) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x53780c0 (libc.so.6:strcmp) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x5400620 (libc.so.6:__memcpy_chk) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x53827b0 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x537ca40 (libc.so.6:strstr) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x537b810 (libc.so.6:rindex) redirected to 0x4c2b450 (rindex)
---25150-- REDIR: 0x538d920 (libc.so.6:__strcmp_sse2_unaligned) redirected to 0x4c2ca40 (strcmp)
---25150-- REDIR: 0x5384b40 (libc.so.6:strchrnul) redirected to 0x4c2f8d0 (strchrnul)
---25150-- REDIR: 0x537d790 (libc.so.6:__GI_mempcpy) redirected to 0x4c2fad0 (__GI_mempcpy)
---25150-- REDIR: 0x5379b10 (libc.so.6:strlen) redirected to 0x4c2ba10 (strlen)
---25150-- REDIR: 0x5372900 (libc.so.6:malloc) redirected to 0x4c28b6f (malloc)
---25150-- REDIR: 0x53733f0 (libc.so.6:calloc) redirected to 0x4c2a8f2 (calloc)
-==25150== Thread 3:
-==25150== Conditional jump or move depends on uninitialised value(s)
-==25150==    at 0x401894: computeFunc (in /home/jaigret/Documents/Project/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
-==25150==    by 0x4E3C609: start_thread (in /usr/lib64/libpthread-2.22.so)
-==25150== 
-==25150== 
-==25150== More than 10000000 total errors detected.  I'm not reporting any more.
-==25150== Final error counts will be inaccurate.  Go fix your program!
-==25150== Rerun with --error-limit=no to disable this cutoff.  Note
-==25150== that errors may occur in your program without prior warning from
-==25150== Valgrind, because errors are no longer being displayed.
-==25150== 
---25150-- REDIR: 0x537c470 (libc.so.6:__GI_strstr) redirected to 0x4c30000 (__strstr_sse2)
---25150-- REDIR: 0x537cc80 (libc.so.6:memchr) redirected to 0x4c2cc20 (memchr)
---25150-- REDIR: 0x5382820 (libc.so.6:__GI_memcpy) redirected to 0x4c2d5d0 (__GI_memcpy)
---25150-- REDIR: 0x5379550 (libc.so.6:strcpy) redirected to 0x4a2372e (_vgnU_ifunc_wrapper)
---25150-- REDIR: 0x5392790 (libc.so.6:__strcpy_sse2_unaligned) redirected to 0x4c2baf0 (strcpy)
---25150-- REDIR: 0x5372c60 (libc.so.6:free) redirected to 0x4c29c69 (free)
---25150-- REDIR: 0x5379cd0 (libc.so.6:strnlen) redirected to 0x4c2b990 (strnlen)
-==25150== 
-==25150== HEAP SUMMARY:
-==25150==     in use at exit: 8,294,756 bytes in 8 blocks
-==25150==   total heap usage: 22 allocs, 15 frees, 22,811,828 bytes allocated
-==25150== 
-==25150== Searching for pointers to 8 not-freed blocks
-==25150== Checked 25,274,952 bytes
-==25150== 
-==25150== Thread 1:
-==25150== 6 bytes in 1 blocks are definitely lost in loss record 2 of 8
-==25150==    at 0x4C28BF6: malloc (vg_replace_malloc.c:299)
-==25150==    by 0x40168E: readerFunc (in /home/jaigret/Documents/Project/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
-==25150==    by 0x4E3C609: start_thread (in /usr/lib64/libpthread-2.22.so)
-==25150== 
-==25150== 272 bytes in 1 blocks are possibly lost in loss record 7 of 8
-==25150==    at 0x4C2A988: calloc (vg_replace_malloc.c:711)
-==25150==    by 0x40122D4: _dl_allocate_tls (in /usr/lib64/ld-2.22.so)
-==25150==    by 0x4E3D145: pthread_create@@GLIBC_2.2.5 (in /usr/lib64/libpthread-2.22.so)
-==25150==    by 0x4013F9: main (in /home/jaigret/Documents/Project/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
-==25150== 
-==25150== LEAK SUMMARY:
-==25150==    definitely lost: 6 bytes in 1 blocks
-==25150==    indirectly lost: 0 bytes in 0 blocks
-==25150==      possibly lost: 272 bytes in 1 blocks
-==25150==    still reachable: 8,294,478 bytes in 6 blocks
-==25150==         suppressed: 0 bytes in 0 blocks
-==25150== Reachable blocks (those to which a pointer was found) are not shown.
-==25150== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==25150== 
-==25150== Use --track-origins=yes to see where uninitialised values come from
-==25150== ERROR SUMMARY: 10000002 errors from 3 contexts (suppressed: 0 from 0)
-==25150== 
-==25150== 10000000 errors in context 1 of 3:
-==25150== Thread 3:
-==25150== Conditional jump or move depends on uninitialised value(s)
-==25150==    at 0x401894: computeFunc (in /home/jaigret/Documents/Project/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
-==25150==    by 0x4E3C609: start_thread (in /usr/lib64/libpthread-2.22.so)
-==25150== 
-==25150== ERROR SUMMARY: 10000002 errors from 3 contexts (suppressed: 0 from 0)
+==161165== Memcheck, a memory error detector
+==161165== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==161165== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==161165== Command: ./main exemple_fractales.txt best.bmp
+==161165== Parent PID: 161164
+==161165== 
+--161165-- 
+--161165-- Valgrind options:
+--161165--    -v
+--161165--    --tool=memcheck
+--161165--    --leak-check=full
+--161165--    --num-callers=40
+--161165--    --log-file=valgrind.log
+--161165-- Contents of /proc/version:
+--161165--   Linux version 4.2.8-200.fc22.x86_64 (mockbuild@bkernel02.phx2.fedoraproject.org) (gcc version 5.3.1 20151207 (Red Hat 5.3.1-2) (GCC) ) #1 SMP Tue Dec 15 16:50:23 UTC 2015
+--161165-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-sse3
+--161165-- Page sizes: currently 4096, max supported 4096
+--161165-- Valgrind library directory: /usr/lib64/valgrind
+--161165-- Reading syms from /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main
+--161165-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
+--161165--    object doesn't have a symbol table
+--161165--    object doesn't have a dynamic symbol table
+--161165-- Reading syms from /usr/lib64/ld-2.21.so
+--161165-- Scheduler: using generic scheduler lock implementation.
+--161165-- Reading suppressions file: /usr/lib64/valgrind/default.supp
+==161165== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-161165-by-jaigret-on-bibinoi.info.ucl.ac.be
+==161165== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-161165-by-jaigret-on-bibinoi.info.ucl.ac.be
+==161165== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-161165-by-jaigret-on-bibinoi.info.ucl.ac.be
+==161165== 
+==161165== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==161165== don't want to do, unless you know exactly what you're doing,
+==161165== or are doing some strange experiment):
+==161165==   /usr/lib64/valgrind/../../bin/vgdb --pid=161165 ...command...
+==161165== 
+==161165== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==161165==   /path/to/gdb ./main
+==161165== and then give GDB the following command
+==161165==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=161165
+==161165== --pid is optional if only one valgrind process is running
+==161165== 
+--161165-- REDIR: 0x3c9d819840 (ld-linux-x86-64.so.2:strlen) redirected to 0x380c10d1 (???)
+--161165-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
+--161165--    object doesn't have a symbol table
+--161165-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
+--161165--    object doesn't have a symbol table
+==161165== WARNING: new redirection conflicts with existing -- ignoring it
+--161165--     old: 0x3c9d819840 (strlen              ) R-> (0000.0) 0x380c10d1 ???
+--161165--     new: 0x3c9d819840 (strlen              ) R-> (2007.0) 0x04a09ce0 strlen
+--161165-- REDIR: 0x3c9d8195a0 (ld-linux-x86-64.so.2:index) redirected to 0x4a09880 (index)
+--161165-- REDIR: 0x3c9d8197c0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4a0ad90 (strcmp)
+--161165-- REDIR: 0x3c9d81a500 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4a0dd70 (mempcpy)
+--161165-- Reading syms from /usr/lib64/libpthread-2.21.so
+--161165-- Reading syms from /usr/lib64/libSDL-1.2.so.0.11.4
+--161165--    object doesn't have a symbol table
+--161165-- Reading syms from /usr/lib64/libc-2.21.so
+--161165-- Reading syms from /usr/lib64/libm-2.21.so
+--161165-- Reading syms from /usr/lib64/libdl-2.21.so
+--161165-- REDIR: 0x3c9dc8f360 (libc.so.6:strcasecmp) redirected to 0x480172e (_vgnU_ifunc_wrapper)
+--161165-- REDIR: 0x3c9dc91650 (libc.so.6:strncasecmp) redirected to 0x480172e (_vgnU_ifunc_wrapper)
+--161165-- REDIR: 0x3c9dc8eaeb (libc.so.6:memcpy@GLIBC_2.2.5) redirected to 0x480172e (_vgnU_ifunc_wrapper)
+--161165-- REDIR: 0x3c9dc8cd90 (libc.so.6:rindex) redirected to 0x4a09560 (rindex)
+--161165-- REDIR: 0x3c9dc89640 (libc.so.6:strcmp) redirected to 0x480172e (_vgnU_ifunc_wrapper)
+--161165-- REDIR: 0x3c9dc9efa0 (libc.so.6:__strcmp_sse2_unaligned) redirected to 0x4a0ac50 (strcmp)
+--161165-- REDIR: 0x3c9dc960e0 (libc.so.6:strchrnul) redirected to 0x4a0d8a0 (strchrnul)
+--161165-- REDIR: 0x3c9dc8ed10 (libc.so.6:__GI_mempcpy) redirected to 0x4a0daa0 (__GI_mempcpy)
+--161165-- REDIR: 0x3c9dc8b090 (libc.so.6:strlen) redirected to 0x4a09c20 (strlen)
+--161165-- REDIR: 0x3c9dc83400 (libc.so.6:malloc) redirected to 0x4a06bc9 (malloc)
+--161165-- REDIR: 0x3c9dc84c30 (libc.so.6:calloc) redirected to 0x4a08931 (calloc)
+--161165-- REDIR: 0x3c9dc8d9f0 (libc.so.6:__GI_strstr) redirected to 0x4a0dfd0 (__strstr_sse2)
+--161165-- REDIR: 0x3c9dc8e200 (libc.so.6:memchr) redirected to 0x4a0ae30 (memchr)
+--161165-- REDIR: 0x3c9dc93da0 (libc.so.6:__GI_memcpy) redirected to 0x4a0b7e0 (__GI_memcpy)
+--161165-- REDIR: 0x3c9dc8aad0 (libc.so.6:strcpy) redirected to 0x480172e (_vgnU_ifunc_wrapper)
+--161165-- REDIR: 0x3c9dca3e10 (libc.so.6:__strcpy_sse2_unaligned) redirected to 0x4a09d00 (strcpy)
+==161165== Thread 2:
+==161165== Invalid write of size 1
+==161165==    at 0x4A09D2F: strcpy (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x401C3E: fractal_new (fractal.c:25)
+==161165==    by 0x4017DF: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165==  Address 0x4c3d946 is 0 bytes after a block of size 6 alloc'd
+==161165==    at 0x4A06C50: malloc (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x401C27: fractal_new (fractal.c:24)
+==161165==    by 0x4017DF: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165== 
+==161165== Conditional jump or move depends on uninitialised value(s)
+==161165==    at 0x40182C: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165== 
+--161165-- REDIR: 0x3c9dc83760 (libc.so.6:free) redirected to 0x4a07ce3 (free)
+==161165== Thread 3:
+==161165== Invalid read of size 1
+==161165==    at 0x4A09D23: strcpy (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x401AAE: computeFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165==  Address 0x4c3d946 is 0 bytes after a block of size 6 alloc'd
+==161165==    at 0x4A06C50: malloc (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x401C27: fractal_new (fractal.c:24)
+==161165==    by 0x4017DF: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165== 
+==161165== Invalid read of size 8
+==161165==    at 0x401C60: fractal_free (fractal.c:33)
+==161165==    by 0x401B34: computeFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165==  Address 0x28 is not stack'd, malloc'd or (recently) free'd
+==161165== 
+==161165== 
+==161165== Process terminating with default action of signal 11 (SIGSEGV)
+==161165==  Access not within mapped region at address 0x28
+==161165==    at 0x401C60: fractal_free (fractal.c:33)
+==161165==    by 0x401B34: computeFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165==  If you believe this happened as a result of a stack
+==161165==  overflow in your program's main thread (unlikely but
+==161165==  possible), you can try to increase the size of the
+==161165==  main thread stack using the --main-stacksize= flag.
+==161165==  The main thread stack size used in this run was 8388608.
+==161165== 
+==161165== HEAP SUMMARY:
+==161165==     in use at exit: 8,295,604 bytes in 9 blocks
+==161165==   total heap usage: 10 allocs, 1 frees, 8,296,156 bytes allocated
+==161165== 
+==161165== Searching for pointers to 9 not-freed blocks
+==161165== Checked 25,363,256 bytes
+==161165== 
+==161165== Thread 1:
+==161165== 6 bytes in 1 blocks are definitely lost in loss record 2 of 9
+==161165==    at 0x4A06C50: malloc (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x40171B: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165== 
+==161165== 560 bytes in 1 blocks are possibly lost in loss record 7 of 9
+==161165==    at 0x4A089C7: calloc (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x3C9D8121B4: _dl_allocate_tls (in /usr/lib64/ld-2.21.so)
+==161165==    by 0x3C9E808045: pthread_create@@GLIBC_2.2.5 (in /usr/lib64/libpthread-2.21.so)
+==161165==    by 0x401444: main (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165== 
+==161165== 560 bytes in 1 blocks are possibly lost in loss record 8 of 9
+==161165==    at 0x4A089C7: calloc (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x3C9D8121B4: _dl_allocate_tls (in /usr/lib64/ld-2.21.so)
+==161165==    by 0x3C9E808045: pthread_create@@GLIBC_2.2.5 (in /usr/lib64/libpthread-2.21.so)
+==161165==    by 0x4014CE: main (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165== 
+==161165== LEAK SUMMARY:
+==161165==    definitely lost: 6 bytes in 1 blocks
+==161165==    indirectly lost: 0 bytes in 0 blocks
+==161165==      possibly lost: 1,120 bytes in 2 blocks
+==161165==    still reachable: 8,294,478 bytes in 6 blocks
+==161165==         suppressed: 0 bytes in 0 blocks
+==161165== Reachable blocks (those to which a pointer was found) are not shown.
+==161165== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==161165== 
+==161165== Use --track-origins=yes to see where uninitialised values come from
+==161165== ERROR SUMMARY: 7 errors from 7 contexts (suppressed: 0 from 0)
+==161165== 
+==161165== 1 errors in context 1 of 7:
+==161165== Thread 3:
+==161165== Invalid read of size 8
+==161165==    at 0x401C60: fractal_free (fractal.c:33)
+==161165==    by 0x401B34: computeFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165==  Address 0x28 is not stack'd, malloc'd or (recently) free'd
+==161165== 
+==161165== 
+==161165== 1 errors in context 2 of 7:
+==161165== Invalid read of size 1
+==161165==    at 0x4A09D23: strcpy (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x401AAE: computeFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165==  Address 0x4c3d946 is 0 bytes after a block of size 6 alloc'd
+==161165==    at 0x4A06C50: malloc (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x401C27: fractal_new (fractal.c:24)
+==161165==    by 0x4017DF: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165== 
+==161165== 
+==161165== 1 errors in context 3 of 7:
+==161165== Thread 2:
+==161165== Conditional jump or move depends on uninitialised value(s)
+==161165==    at 0x40182C: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165== 
+==161165== 
+==161165== 1 errors in context 4 of 7:
+==161165== Invalid write of size 1
+==161165==    at 0x4A09D2F: strcpy (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x401C3E: fractal_new (fractal.c:25)
+==161165==    by 0x4017DF: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165==  Address 0x4c3d946 is 0 bytes after a block of size 6 alloc'd
+==161165==    at 0x4A06C50: malloc (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==161165==    by 0x401C27: fractal_new (fractal.c:24)
+==161165==    by 0x4017DF: readerFunc (in /etinfo/users/2016/jaigret/Documents/GitHub/FractalProject/fractal_AIGRET_VANVYVE/main)
+==161165==    by 0x3C9E807554: start_thread (in /usr/lib64/libpthread-2.21.so)
+==161165== 
+==161165== ERROR SUMMARY: 7 errors from 7 contexts (suppressed: 0 from 0)
