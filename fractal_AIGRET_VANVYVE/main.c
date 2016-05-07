@@ -87,7 +87,7 @@ int err;
 
 if (stdinUsed) {
   printf("Pour entrer du texte sur stdin, respecter le schema \"name w h a b\"\n");
-  printf("Pour terminer, appuyez sur ctrl + D sous Linux et ctrl + Z sous Windows\n");
+  printf("Pour terminer, entrer ':exit'\n");
 }
 for (int i = 0; i < nbFiles; i++) {
 
@@ -129,20 +129,27 @@ return err;
 //PRODUCTEUR
 void *readerFunc(void *param) {
   char* save;
+	int std = 0;
+	int  again = 1;
 
   FILE *fichier = NULL;
   const char* nomfichier = (char *) param;
 
   if (strcmp(nomfichier, STDIN) == 0) {
     fichier = stdin;
+		std = 1;
   }
   else {
     fichier = fopen(nomfichier, "r");
   }
   if (fichier == NULL) fprintf(stderr, "Erreur lors de l'ouverture du fichier  : %s\n", (char *) param);
   char current[MAXLEN];
-  while (fgets(current, MAXLEN, fichier) != NULL){
+  while (fgets(current, MAXLEN, fichier) != NULL && again){
     if (current[0] != '\n' && current[0] != '#'){
+			if (std) {
+				if (strcmp(current, ":exit")) again --;
+			}
+			if (again) {
       //Production de l item
       char *n = strtok_r(current, delim, &save);
       char *name = (char *) malloc(strlen(n) * sizeof(char));
@@ -167,14 +174,17 @@ void *readerFunc(void *param) {
       //La structure a été placée pour le calcul : fin de la Section Critique
       pthread_mutex_unlock(&mutex_buffer);
     }
+	}
   }
 
-  //On essaie de fermer le fichier
-  int err = fclose(fichier);
-  if (err != 0)
-  {
-    fprintf(stderr, "Erreur lors de la fermeture du fichier : %s\n",   (char *) param);
-  }
+	if (!std) {
+	  //On essaie de fermer le fichier
+	  int err = fclose(fichier);
+	  if (err != 0)
+	  {
+	    fprintf(stderr, "Erreur lors de la fermeture du fichier : %s\n",   (char *) param);
+	  }
+	}
   //Pour marquer qu'on a bien ferme le fichier
   pthread_mutex_lock(&mutex_closing);
   isReading--;
